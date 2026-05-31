@@ -318,73 +318,6 @@ function renderMatches(matches, limit){
     html+=`</div>`;
   }
 
-  // ===== LCK 合并统计 (2025+) =====
-  const isNewFormat = !!(yd.rounds_1_2 || yd.rounds_3_5);
-  if (isNewFormat){
-    const lckPhases=['🇰🇷 LCK Cup','📅 LCK Rounds 1-2','📅 LCK Rounds 3-5'];
-    let lckW=0,lckL=0;
-    const lckPhaseStats=[];
-    allMS.forEach(sm=>{
-      if(lckPhases.includes(sm.season)){
-        let pw=0,pl=0;
-        sm.matches.forEach(m=>{if(m.w)pw++;else pl++;});
-        lckW+=pw;lckL+=pl;
-        lckPhaseStats.push({name:sm.season,w:pw,l:pl});
-      }
-    });
-    if(lckW+lckL>0){
-      html+=`<h3 class="section-title">🇰🇷 LCK ${year} 全年战绩 · ${lckW}-${lckL} · ${(lckW/(lckW+lckL)*100).toFixed(0)}% 胜率</h3>`;
-      html+=`<div class="tourney-grid">`;
-      lckPhaseStats.forEach(ps=>{
-        html+=`<div class="t-card" style="text-align:center"><h4>${ps.name}</h4>
-          <div style="font-size:1.2em;font-weight:900"><span style="color:#4caf50">${ps.w}</span><span style="color:var(--m)">-${ps.l}</span></div>
-          <div class="detail">${ps.w+ps.l}场 · ${ps.w+ps.l>0?(ps.w/(ps.w+ps.l)*100).toFixed(0):0}%胜率</div></div>`;
-      });
-      html+=`</div>`;
-    }
-  }
-
-  // ===== Per-tournament win rates (国际赛) =====
-  const intlLabels=['🌍 MSI','⚡ EWC','👑 Worlds'];
-  const intlStats=[];
-  allMS.forEach(sm=>{
-    if(intlLabels.includes(sm.season)){
-      let iw=0,il=0;
-      sm.matches.forEach(m=>{if(m.w)iw++;else il++;});
-      if(iw+il>0)intlStats.push({name:sm.season,w:iw,l:il});
-    }
-  });
-  if(intlStats.length>0){
-    html+=`<h3 class="section-title">🌍 国际赛事胜率</h3><div class="tourney-grid">`;
-    intlStats.forEach(is=>{
-      html+=`<div class="t-card" style="text-align:center"><h4>${is.name}</h4>
-        <div style="font-size:1.3em;font-weight:900"><span style="color:#4caf50">${is.w}</span><span style="color:var(--m)">-${is.l}</span></div>
-        <div class="detail">${is.w+is.l}场 · ${(is.w/(is.w+is.l)*100).toFixed(0)}%胜率</div></div>`;
-    });
-    html+=`</div>`;
-  }
-
-  // Old format: separate Spring/Summer win rates
-  if (!isNewFormat){
-    const lckWins={};
-    const oldLck=['🌸 LCK Spring','☀️ LCK Summer'];
-    allMS.forEach(sm=>{
-      if(oldLck.includes(sm.season)){
-        let pw=0,pl=0;
-        sm.matches.forEach(m=>{if(m.w)pw++;else pl++;});
-        if(pw+pl>0)lckWins[sm.season]={w:pw,l:pl};
-      }
-    });
-    if(Object.keys(lckWins).length>0){
-      html+=`<h3 class="section-title">📊 LCK 各赛季胜率</h3><div class="tourney-grid">`;
-      Object.entries(lckWins).forEach(([k,v])=>{
-        html+=`<div class="t-card" style="text-align:center"><h4>${k}</h4>
-          <div style="font-size:1.3em;font-weight:900"><span style="color:#4caf50">${v.w}</span><span style="color:var(--m)">-${v.l}</span></div>
-          <div class="detail">${v.w+v.l}场 · ${(v.w/(v.w+v.l)*100).toFixed(0)}%胜率</div></div>`;
-      });
-      html+=`</div>`;
-    }
-  }
 
   // Legacy tournament cards (for backward compat)
   html+=`<div class="tourney-grid">`;
@@ -399,41 +332,62 @@ function renderMatches(matches, limit){
   html+=`</div>`;
 
 
-  // Match tables - group RS + PO together with breakdown
+  // ===== 合并所有LCK赛事为一个整体 =====
+  const lckLabels=['🌸 LCK Spring','☀️ LCK Summer','🇰🇷 LCK Cup','📅 LCK Rounds 1-2','📅 LCK Rounds 3-5'];
+  const intlOrder2=['🌍 MSI','⚡ EWC','👑 Worlds'];
+  const lckSections=[], intlSections=[];
+
   allMS.forEach(sm=>{
-    if(sm.matches.length>0){
-      // Split matches into Regular Season vs Playoffs/Other
+    if(lckLabels.includes(sm.season)) lckSections.push(sm);
+    else if(intlOrder2.includes(sm.season)) intlSections.push(sm);
+    else lckSections.push(sm); // fallback
+  });
+
+  // 先展示合并的LCK总体 + 各阶段细分
+  if(lckSections.length>0){
+    let lckTotalW=0,lckTotalL=0,lckTotalGW=0,lckTotalGL=0;
+    lckSections.forEach(sec=>{
+      sec.matches.forEach(m=>{
+        if(m.w)lckTotalW++;else lckTotalL++;
+        const[gw,gl]=gameWins(m.score||'0-0');lckTotalGW+=gw;lckTotalGL+=gl;
+      });
+    });
+    html+=`<h3 class="section-title">🇰🇷 LCK ${year} · 全年总战绩 ${lckTotalW}-${lckTotalL} (大场) ${lckTotalGW}-${lckTotalGL} (小场) · ${(lckTotalW/(lckTotalW+lckTotalL)*100).toFixed(0)}% 胜率</h3>`;
+
+    lckSections.forEach(sm=>{
+      if(sm.matches.length===0)return;
       const rsMatches=[], poMatches=[];
       sm.matches.forEach(m=>{
         const evt=(m.season||m.event||'').toLowerCase();
         if(evt.includes('po ')||evt.includes('playoff')||evt.includes('final')||evt.includes('upper')||evt.includes('lower')||evt.includes('r1')||evt.includes('r2')||evt.includes('r3')||evt.includes('sf')||evt.includes('lb')){
           poMatches.push(m);
-        }else{
-          rsMatches.push(m);
-        }
+        }else{rsMatches.push(m);}
       });
-      const rsW=rsMatches.filter(m=>m.w).length,rsL=rsMatches.length-rsW;
-      const poW=poMatches.filter(m=>m.w).length,poL=poMatches.length-poW;
-      // Game level stats
-      let rsGW=0,rsGL=0,poGW=0,poGL=0;
-      rsMatches.forEach(m=>{const[gw,gl]=gameWins(m.score||'0-0');rsGW+=gw;rsGL+=gl;});
-      poMatches.forEach(m=>{const[gw,gl]=gameWins(m.score||'0-0');poGW+=gw;poGL+=gl;});
+      let rsW=0,rsL=0,rsGW=0,rsGL=0,poW=0,poL=0,poGW=0,poGL=0;
+      rsMatches.forEach(m=>{if(m.w)rsW++;else rsL++;const[gw,gl]=gameWins(m.score||'0-0');rsGW+=gw;rsGL+=gl;});
+      poMatches.forEach(m=>{if(m.w)poW++;else poL++;const[gw,gl]=gameWins(m.score||'0-0');poGW+=gw;poGL+=gl;});
+      const smW=rsW+poW,smL=rsL+poL,smGW=rsGW+poGW,smGL=rsGL+poGL;
+      if(smW+smL===0)return;
 
-      const totW=rsW+poW, totL=rsL+poL;
-      const totGW=rsGW+poGW, totGL=rsGL+poGL;
-
-      html+=`<h3 class="section-title">${sm.season} · 总战绩 ${totW}-${totL} (大场) ${totGW}-${totGL} (小场)</h3>`;
-
-      // Regular Season subsection
+      html+=`<h4 style="color:#fff;margin:16px 0 6px;font-size:1em">${sm.season} · ${smW}-${smL} (大场) ${smGW}-${smGL} (小场)</h4>`;
       if(rsMatches.length>0){
-        html+=`<div style="margin:8px 0;color:var(--m);font-size:.85em">📋 常规赛 ${rsW}-${rsL} (小场${rsGW}-${rsGL})</div>`;
-        html+=renderMatches(rsMatches.map(m=>({...m,season:m.season||sm.season})),999);
+        html+=`<div style="color:var(--m);font-size:.8em;margin:4px 0">常规赛 ${rsW}-${rsL} (小场${rsGW}-${rsGL})</div>`;
+        html+=renderMatches(rsMatches.map(m=>({...m,season:'RS'})),rsMatches.length);
       }
-      // Playoffs/Qualifiers subsection
       if(poMatches.length>0){
-        html+=`<div style="margin:12px 0 8px;color:var(--m);font-size:.85em">🏆 季后赛/资格赛 ${poW}-${poL} (小场${poGW}-${poGL})</div>`;
-        html+=renderMatches(poMatches.map(m=>({...m,season:m.season||m.event||sm.season})),999);
+        html+=`<div style="color:var(--m);font-size:.8em;margin:8px 0 4px">季后赛/资格赛 ${poW}-${poL} (小场${poGW}-${poGL})</div>`;
+        html+=renderMatches(poMatches.map(m=>({...m,season:m.event||'PO'})),poMatches.length);
       }
+    });
+  }
+
+  // 国际赛事单独展示
+  intlSections.forEach(sm=>{
+    if(sm.matches.length>0){
+      let iw=0,il=0,igw=0,igl=0;
+      sm.matches.forEach(m=>{if(m.w)iw++;else il++;const[gw,gl]=gameWins(m.score||'0-0');igw+=gw;igl+=gl;});
+      html+=`<h3 class="section-title">${sm.season} · ${iw}-${il} (大场) ${igw}-${igl} (小场) · ${(iw/(iw+il)*100).toFixed(0)}% 胜率</h3>`;
+      html+=renderMatches(sm.matches.map(m=>({...m,season:m.event||sm.season})),999);
     }
   });
 
