@@ -116,12 +116,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
   <button class="tab-btn" onclick="switchTab('2025',event)">2025 🏆</button>
   <button class="tab-btn" onclick="switchTab('2024',event)">2024 🏆</button>
   <button class="tab-btn" onclick="switchTab('2023',event)">2023 🏆</button>
+  <button class="tab-btn" onclick="switchTab('transition',event)">🌅 过渡时期</button>
   <button class="tab-btn" onclick="switchTab('legacy',event)">王朝 🏆</button>
 </div>
 
 <div id="panel-summary"></div>
 <div id="panel-players" style="display:none"></div>
 <div id="panel-2023" style="display:none"></div>
+<div id="panel-transition" style="display:none"></div>
 <div id="panel-legacy" style="display:none"></div>
 <div id="panel-2024" style="display:none"></div>
 <div id="panel-2025" style="display:none"></div>
@@ -140,9 +142,9 @@ const PROFILES = {"Faker": {"photo": "", "color": "#e10600", "role": "Mid", "bir
 function switchTab(year,evt){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   if(evt&&evt.target)evt.target.closest('.tab-btn').classList.add('active');
-  else{const idx={summary:0,players:1,'2026':2,'2025':3,'2024':4,'2023':5,legacy:6}[year]||0;
+  else{const idx={summary:0,players:1,'2026':2,'2025':3,'2024':4,'2023':5,transition:6,legacy:7}[year]||0;
     const btns=document.querySelectorAll('.tab-btn');if(btns[idx])btns[idx].classList.add('active');}
-  ['summary','players','2023','2024','2025','2026','legacy'].forEach(y=>{
+  ['summary','players','2023','2024','2025','2026','transition','legacy'].forEach(y=>{
     document.getElementById('panel-'+y).style.display=y===year?'block':'none';
   });
 }
@@ -493,6 +495,29 @@ function togglePlayer(id){
   });
 
   document.getElementById('panel-legacy').innerHTML=html;
+})();
+
+// ===== BUILD TRANSITION PANEL (2017-2022) =====
+(function(){
+  var html='<div class="hero"><div class="trophy-icon">🌅</div><h2>T1 过渡时期 · 2017-2022</h2><p style="color:var(--m);margin-top:6px">从王朝低谷到 ZOFGK 崛起</p></div>';
+  var years=[
+    {y:2017,r:['Huni','Untara','Peanut','Blank','Faker','Sky','Bang','Wolf'],c:'kkOma',n:'8人轮换',a:[{t:'LCK Spring',r:'冠军',d:'3-0 vs KT'},{t:'MSI',r:'冠军',d:'3-1 vs G2'},{t:'LCK Summer',r:'亚军',d:'1-3 vs LZ'},{t:'Worlds',r:'亚军',d:'0-3 vs SSG(鸟巢)'}]},
+    {y:2018,r:['Thal','Untara','Blank','Blossom','Faker','Pirean','Bang','Leo','Wolf','Effort'],c:'Bengi',n:'十人大轮换·队史最暗',a:[{t:'LCK Spring',r:'第4名',d:''},{t:'LCK Summer',r:'第7名',d:'未进季后赛'},{t:'Worlds',r:'未晋级',d:''}]},
+    {y:2019,r:['Khan','Clid','Haru','Faker','Gori','Teddy','Mata','Effort'],c:'Zefa',n:'8人·春夏双冠',a:[{t:'LCK Spring',r:'冠军',d:'3-0 vs Griffin'},{t:'MSI',r:'四强',d:'2-3 vs G2'},{t:'LCK Summer',r:'冠军',d:'3-1 vs Griffin'},{t:'Worlds',r:'四强',d:'1-3 vs G2'}]},
+    {y:2020,r:['Canna','Cuzz','Ellim','Faker','Clozer','Teddy','Gumayusi','Effort'],c:'Kim',n:'8人·Clozer轮换',a:[{t:'LCK Spring',r:'冠军',d:'3-0 vs Gen.G'},{t:'LCK Summer',r:'第5名',d:'未进季后赛'},{t:'Worlds',r:'未晋级',d:''}]},
+    {y:2021,r:['Canna','Zeus','Cuzz','Oner','Ellim','Faker','Clozer','Teddy','Gumayusi','Keria'],c:'Stardust',n:'10人·教练动荡',a:[{t:'LCK Spring',r:'第4名',d:'Daeny→Stardust'},{t:'LCK Summer',r:'亚军',d:'1-3 vs DK'},{t:'Worlds',r:'四强',d:'2-3 vs DK'}]},
+    {y:2022,r:['Zeus','Oner','Faker','Gumayusi','Keria','Asper'],c:'Bengi',n:'ZOFGK成型',a:[{t:'LCK Spring',r:'冠军',d:'3-1 vs Gen.G'},{t:'MSI',r:'亚军',d:'2-3 vs RNG'},{t:'LCK Summer',r:'亚军',d:'0-3 vs Gen.G'},{t:'Worlds',r:'亚军',d:'2-3 vs DRX'}]}
+  ];
+  years.forEach(function(td){
+    html+='<h3 class="section-title">'+td.y+' · Coach: '+td.c+' <span style="color:var(--m);font-size:.7em;font-weight:400">'+td.n+'</span></h3>';
+    html+='<div class="tourney-grid">';
+    td.a.forEach(function(a){html+='<div class="t-card"><h4>'+a.t+'</h4><div style="font-size:1.1em;font-weight:900;color:#fff">'+a.r+'</div>'+(a.d?'<div class="detail">'+a.d+'</div>':'')+'</div>';});
+    html+='</div>';
+    html+='<div class="roster-row" style="margin:8px 0 16px;display:flex;gap:6px;flex-wrap:wrap">';
+    td.r.forEach(function(n){html+='<span class="roster-tag">'+n+'</span>';});
+    html+='</div>';
+  });
+  document.getElementById('panel-transition').innerHTML=html;
 })();
 </script>
 </body>
