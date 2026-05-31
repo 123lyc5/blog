@@ -211,10 +211,12 @@ function renderMatches(matches, limit){
   var html='<div class="hero"><div class="trophy-icon">👑</div><h2>T1 王朝 · 六冠数据中心</h2><p style="color:var(--m);margin-top:6px">2023 · 2024 · 2025 · 2026</p></div>';
   html+='<div id="worldsCards"></div>';
   document.getElementById('panel-summary').innerHTML=html;
-  // Worlds cards - safe JS after DOM ready
-  var wd=[{y:2026,r:'待定',d:'冲击四连冠',c:0},{y:2025,r:'🏆 冠军',d:'3-2 vs KT (三连冠!)',c:1},{y:2024,r:'🏆 冠军',d:'3-2 vs BLG (卫冕)',c:1},{y:2023,r:'🏆 冠军',d:'3-0 vs WBG (ZOFGK首冠)',c:1},{y:2016,r:'🏆 冠军',d:'3-2 vs SSG (Faker FMVP)',c:1},{y:2015,r:'🏆 冠军',d:'3-1 vs KOO Tigers (15-1统治)',c:1},{y:2013,r:'🏆 冠军',d:'3-0 vs Royal Club (SKT首冠)',c:1}];
+  // Worlds showcase - enhanced
+  var wd=[{y:2026,r:'⏳ 待定',d:'冲击史无前例四连冠',c:0,s:'TBD'},{y:2025,r:'🏆 冠军',d:'成都 · 3-2 vs KT Rolster',c:1,s:'Gumayusi FMVP · 三连冠王朝'},{y:2024,r:'🏆 冠军',d:'伦敦 · 3-2 vs BLG',c:1,s:'Faker FMVP · 绝境塞拉斯'},{y:2023,r:'🏆 冠军',d:'首尔 · 3-0 vs WBG',c:1,s:'Zeus FMVP · ZOFGK首冠'},{y:2016,r:'🏆 冠军',d:'洛杉矶 · 3-2 vs SSG',c:1,s:'Faker FMVP · 史上最精彩BO5'},{y:2015,r:'🏆 冠军',d:'柏林 · 3-1 vs KOO Tigers',c:1,s:'15胜1负 · 全程统治'},{y:2013,r:'🏆 冠军',d:'洛杉矶 · 3-0 vs Royal Club',c:1,s:'SKT王朝起点 · Faker出道即巅峰'}];
   var whtml='<h3 class="section-title">👑 历届世界赛成绩</h3><div class="tourney-grid">';
-  wd.forEach(function(w){whtml+='<div class="t-card" style="text-align:center;'+(w.c?'border-color:rgba(200,169,81,.5)':'')+'"><h4>'+w.y+'</h4><div style="font-size:1.3em;font-weight:900;color:'+(w.c?'var(--g)':'#fff')+'">'+w.r+'</div><div class="detail">'+w.d+'</div></div>';});
+  wd.forEach(function(w){
+    whtml+='<div class="t-card" style="text-align:center;padding:24px 16px;'+(w.c?'border:2px solid rgba(200,169,81,.5);background:linear-gradient(180deg,rgba(200,169,81,.08),rgba(0,0,0,0))':'opacity:.7')+'"><div style="font-size:.8em;color:var(--m);margin-bottom:4px">'+w.y+'</div><div style="font-size:1.6em;font-weight:900;margin:8px 0;color:'+(w.c?'var(--g)':'var(--m)')+'">'+w.r+'</div><div style="font-size:.85em;color:#ccc;margin:4px 0">'+w.d+'</div><div style="font-size:.75em;color:var(--m);margin-top:6px">'+w.s+'</div></div>';
+  });
   whtml+='</div>';
   document.getElementById('worldsCards').innerHTML=whtml;
 })();
