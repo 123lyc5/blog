@@ -251,7 +251,15 @@ function renderMatches(matches, limit){
     document.getElementById('modalSub').innerHTML='📍 '+w.location+' · 🏆 FMVP: '+w.fmvp;
     var ph=document.getElementById('modalPhoto');
     if(w.photo&&w.photo.length>100){
-      ph.innerHTML='<img src=\"'+w.photo+'\" style=\"max-width:100%;max-height:300px;border-radius:8px;border:1px solid #333\" onerror=\"this.parentElement.innerHTML=\\'<div style=padding:40px;text-align:center;font-size:3em>🏆</div>\\'\">';
+      var img=document.createElement('img');
+      img.src=w.photo;
+      img.style.maxWidth='100%';
+      img.style.maxHeight='300px';
+      img.style.borderRadius='8px';
+      img.style.border='1px solid #333';
+      img.onerror=function(){ph.innerHTML='<div style=\"padding:40px;text-align:center;font-size:3em\">X</div>';};
+      ph.innerHTML='';
+      ph.appendChild(img);
     }else{
       ph.innerHTML='<div style="padding:40px;text-align:center;background:linear-gradient(135deg,rgba(200,169,81,.1),rgba(0,0,0,0));border-radius:8px;border:1px solid #222"><span style="font-size:3em">🏆</span><p style="color:var(--m);margin-top:8px">'+year+' 夺冠时刻</p></div>';
     }
