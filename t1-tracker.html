@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T1 LCK 2026 数据追踪</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+     background:#0a0a0a;color:#e0e0e0;min-height:100vh}
+.container{max-width:960px;margin:0 auto;padding:20px}
+
+/* 头部 */
+.hero{text-align:center;padding:40px 20px 30px;
+      background:linear-gradient(135deg,#1a0000 0%,#0a0a0a 50%,#1a0000 100%);
+      border-bottom:3px solid #e10600;margin-bottom:30px}
+.hero h1{font-size:2.4em;color:#fff;margin-bottom:6px}
+.hero h1 .red{color:#e10600}
+.hero .sub{color:#888;font-size:.95em}
+.hero .updated{color:#555;font-size:.75em;margin-top:6px}
+
+/* 大数字 */
+.big-stats{display:flex;justify-content:center;gap:40px;margin:25px 0 10px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat .num{font-size:3em;font-weight:900;line-height:1}
+.stat .num.win{color:#4caf50}
+.stat .num.loss{color:#e10600}
+.stat .num.wr{color:#ffd700}
+.stat .label{color:#888;font-size:.85em;margin-top:4px}
+
+/* 走势条 */
+.streak-bar{display:flex;justify-content:center;gap:6px;margin:15px 0}
+.streak-dot{width:32px;height:32px;border-radius:6px;display:flex;
+            align-items:center;justify-content:center;font-weight:700;font-size:.85em}
+.streak-dot.w{background:#2e7d32;color:#a5d6a7}
+.streak-dot.l{background:#c62828;color:#ef9a9a}
+
+/* 区块 */
+.section{margin:30px 0}
+.section-title{font-size:1.3em;color:#e10600;margin-bottom:15px;
+               padding-bottom:8px;border-bottom:1px solid #222;
+               display:flex;align-items:center;gap:8px}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:.92em}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid #1a1a1a}
+th{color:#888;font-weight:600;font-size:.82em;text-transform:uppercase}
+tr:hover{background:#111}
+.result-badge{padding:3px 10px;border-radius:4px;font-size:.82em;font-weight:700}
+.result-badge.win{background:#1b5e20;color:#81c784}
+.result-badge.loss{background:#b71c1c;color:#ef9a9a}
+.mvp-highlight{color:#ffd700;font-weight:600}
+
+/* 卡片网格 */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.card{background:#111;border:1px solid #222;border-radius:8px;padding:18px}
+.card h3{color:#e10600;font-size:.95em;margin-bottom:8px}
+.card .big{font-size:1.8em;font-weight:900}
+.card .detail{color:#888;font-size:.8em;margin-top:4px}
+
+/* 对阵胜率 */
+.h2h-item{display:flex;align-items:center;gap:10px;padding:8px 0;
+           border-bottom:1px solid #151515}
+.h2h-team{width:120px;font-weight:600;font-size:.9em}
+.h2h-bar-bg{flex:1;height:20px;background:#151515;border-radius:10px;overflow:hidden}
+.h2h-bar{height:100%;background:linear-gradient(90deg,#4caf50,#81c784);
+         border-radius:10px;transition:width .5s}
+.h2h-bar.losing{background:linear-gradient(90deg,#e10600,#ef5350)}
+.h2h-record{width:80px;text-align:right;font-size:.85em;font-weight:600}
+
+/* 页脚 */
+footer{text-align:center;padding:30px 0;color:#444;font-size:.8em;
+       border-top:1px solid #151515;margin-top:40px}
+footer a{color:#e10600;text-decoration:none}
+
+/* 响应式 */
+@media(max-width:600px){
+  .hero h1{font-size:1.6em}
+  .big-stats{gap:20px}
+  .stat .num{font-size:2.2em}
+  .card-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- 头部 -->
+<div class="hero">
+  <h1>T1 <span class="red">LCK 2026</span> 数据追踪</h1>
+  <p class="sub">真实比赛数据 · 自动更新</p>
+  <p class="updated">最后更新: 2026-05-31</p>
+  <div id="bigStats" class="big-stats"></div>
+  <div id="streakBar" class="streak-bar"></div>
+</div>
+
+<!-- 赛事概览卡片 -->
+<div class="section">
+  <div class="card-grid" id="tourneyCards"></div>
+</div>
+
+<!-- 最近比赛 -->
+<div class="section">
+  <h2 class="section-title">📋 最近比赛</h2>
+  <table>
+    <thead><tr><th>日期</th><th>对手</th><th>比分</th><th>结果</th><th>赛事</th><th>MVP</th></tr></thead>
+    <tbody id="recentTable"></tbody>
+  </table>
+</div>
+
+<!-- MVP 榜 + 对阵战绩 -->
+<div class="section" style="display:grid;grid-template-columns:1fr 1fr;gap:30px" id="bottomGrid">
+  <div>
+    <h2 class="section-title">👑 MVP 榜</h2>
+    <div id="mvpList"></div>
+  </div>
+  <div>
+    <h2 class="section-title">⚔️ 对阵战绩</h2>
+    <div id="h2hList"></div>
+  </div>
+</div>
+
+</div>
+
+<footer>
+  <p>T1 LCK 2026 Tracker · 数据来源 Leaguepedia · <a href="https://github.com/123lyc5/t1-tracker">GitHub</a></p>
+</footer>
+
+<script>
+const matches = [{"date": "2026-01-18", "team1": "T1", "team2": "Hanwha Life", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Cup 2026", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-01-19", "team1": "T1", "team2": "DRX", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Cup 2026", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-01-24", "team1": "T1", "team2": "KT Rolster", "score": "2-1", "mvp": "Faker MVP", "winner": "T1", "tournament": "LCK Cup 2026", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-01-25", "team1": "T1", "team2": "BNK FEARX", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Cup 2026", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-01-31", "team1": "T1", "team2": "Dplus Kia", "score": "3-0", "mvp": "Faker MVP", "winner": "T1", "tournament": "LCK Cup 2026", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-02-08", "team1": "T1", "team2": "Dplus Kia", "score": "2-3", "mvp": "", "winner": "Dplus Kia", "tournament": "LCK Cup 2026 Playoffs", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-04-01", "team1": "T1", "team2": "KT Rolster", "score": "0-2", "mvp": "", "winner": "KT Rolster", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-04-04", "team1": "T1", "team2": "Hanwha Life", "score": "2-0", "mvp": "Faker MVP", "winner": "T1", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-04-08", "team1": "T1", "team2": "Gen.G", "score": "0-2", "mvp": "", "winner": "Gen.G", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-04-10", "team1": "T1", "team2": "DN SOOPers", "score": "2-0", "mvp": "Gumayusi MVP", "winner": "T1", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-04-17", "team1": "T1", "team2": "Dplus Kia", "score": "1-2", "mvp": "", "winner": "Dplus Kia", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-04-19", "team1": "T1", "team2": "Kiwoom DRX", "score": "2-0", "mvp": "Doran MVP", "winner": "T1", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-04-25", "team1": "T1", "team2": "HANJIN BRION", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-04-26", "team1": "T1", "team2": "BNK FEARX", "score": "2-0", "mvp": "Oner MVP", "winner": "T1", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-04-29", "team1": "T1", "team2": "NS RedForce", "score": "2-0", "mvp": "Faker MVP", "winner": "T1", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-05-01", "team1": "T1", "team2": "Hanwha Life", "score": "1-2", "mvp": "", "winner": "Hanwha Life", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-05-08", "team1": "T1", "team2": "DN SOOPers", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-05-10", "team1": "T1", "team2": "BNK FEARX", "score": "2-0", "mvp": "Smash MVP", "winner": "T1", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-05-13", "team1": "T1", "team2": "NS RedForce", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}, {"date": "2026-05-16", "team1": "T1", "team2": "Gen.G", "score": "2-1", "mvp": "Faker MVP", "winner": "T1", "tournament": "LCK Rounds 1-2", "added_at": "2026-05-31T10:40:48.469820"}];
+
+// 只取 T1 的比赛
+const t1Matches = matches.filter(m => m.team1 === 'T1' || m.team2 === 'T1');
+
+// 排序
+t1Matches.sort((a,b) => a.date.localeCompare(b.date));
+
+// 计算战绩
+let wins = 0, losses = 0;
+const results = [];
+t1Matches.forEach(m => {
+  const [s1,s2] = m.score.split('-').map(Number);
+  const t1Score = m.team1 === 'T1' ? s1 : s2;
+  const oppScore = m.team1 === 'T1' ? s2 : s1;
+  const isWin = t1Score > oppScore;
+  if (isWin) wins++; else losses++;
+  results.push({...m, isWin, opponent: m.team1 === 'T1' ? m.team2 : m.team1,
+                t1Score, oppScore});
+});
+
+const total = wins + losses;
+const wr = total > 0 ? (wins/total*100).toFixed(1) : '0.0';
+
+// 大数字
+document.getElementById('bigStats').innerHTML = `
+  <div class="stat"><div class="num win">${wins}</div><div class="label">胜场</div></div>
+  <div class="stat"><div class="num loss">${losses}</div><div class="label">负场</div></div>
+  <div class="stat"><div class="num wr">${wr}%</div><div class="label">胜率</div></div>
+  <div class="stat"><div class="num" style="color:#58a6ff">${total}</div><div class="label">总计</div></div>
+`;
+
+// 走势条（最近10场）
+const recent10 = results.slice(-10).reverse();
+document.getElementById('streakBar').innerHTML = recent10.map(r =>
+  `<div class="streak-dot ${r.isWin?'w':'l'}">${r.isWin?'W':'L'}</div>`
+).join('');
+
+// 赛事卡片
+const tourneyStats = {};
+results.forEach(r => {
+  const t = r.tournament || '其他';
+  if (!tourneyStats[t]) tourneyStats[t] = {w:0,l:0};
+  if (r.isWin) tourneyStats[t].w++; else tourneyStats[t].l++;
+});
+document.getElementById('tourneyCards').innerHTML = Object.entries(tourneyStats).map(([t,s]) => {
+  const twr = ((s.w/(s.w+s.l))*100).toFixed(0);
+  return `<div class="card">
+    <h3>📁 ${t}</h3>
+    <div class="big">${s.w}<span style="color:#888;font-size:.5em">-${s.l}</span></div>
+    <div class="detail">胜率 ${twr}% · ${s.w+s.l} 场</div>
+  </div>`;
+}).join('');
+
+// 最近比赛表格
+document.getElementById('recentTable').innerHTML = results.slice(-15).reverse().map(r =>
+  `<tr>
+    <td>${r.date}</td>
+    <td>${r.opponent}</td>
+    <td>${r.t1Score}-${r.oppScore}</td>
+    <td><span class="result-badge ${r.isWin?'win':'loss'}">${r.isWin?'胜':'负'}</span></td>
+    <td style="color:#888;font-size:.85em">${r.tournament||'-'}</td>
+    <td>${r.mvp?`<span class="mvp-highlight">👑 ${r.mvp}</span>`:'-'}</td>
+  </tr>`
+).join('');
+
+// MVP 榜
+const mvpCount = {};
+results.forEach(r => {
+  if (r.mvp) {
+    const name = r.mvp.replace(' MVP','').trim();
+    mvpCount[name] = (mvpCount[name]||0) + 1;
+  }
+});
+const mvpSorted = Object.entries(mvpCount).sort((a,b) => b[1]-a[1]);
+document.getElementById('mvpList').innerHTML = mvpSorted.length > 0
+  ? mvpSorted.map(([n,c],i) =>
+    `<div class="h2h-item">
+      <span style="color:#ffd700;font-weight:700;width:20px">#${i+1}</span>
+      <span class="h2h-team">${n}</span>
+      <span style="flex:1;text-align:right;font-weight:900;font-size:1.2em">${c}</span>
+      <span style="color:#888;font-size:.8em">次</span>
+    </div>`).join('')
+  : '<p style="color:#555">暂无 MVP 数据</p>';
+
+// 对阵战绩 (按总场次排序)
+const h2h = {};
+results.forEach(r => {
+  if (!h2h[r.opponent]) h2h[r.opponent] = {w:0,l:0};
+  if (r.isWin) h2h[r.opponent].w++; else h2h[r.opponent].l++;
+});
+const h2hSorted = Object.entries(h2h).sort((a,b) => (b[1].w+b[1].l)-(a[1].w+a[1].l));
+document.getElementById('h2hList').innerHTML = h2hSorted.map(([opp,s]) => {
+  const total = s.w+s.l, pct = ((s.w/total)*100).toFixed(0);
+  return `<div class="h2h-item">
+    <span class="h2h-team">${opp}</span>
+    <div class="h2h-bar-bg"><div class="h2h-bar${pct<50?' losing':''}" style="width:${pct}%"></div></div>
+    <span class="h2h-record" style="color:${pct>=50?'#81c784':'#ef9a9a'}">${s.w}-${s.l}</span>
+  </div>`;
+}).join('');
+
+// 响应式修复
+if (window.innerWidth < 600) {
+  document.getElementById('bottomGrid').style.gridTemplateColumns = '1fr';
+}
+</script>
+
+</body>
+</html>
