@@ -145,6 +145,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
   <div class="modal"><button class="modal-close" onclick="document.getElementById('worldsModal').style.display='none'">&times;</button>
     <div class="modal-header"><h2 id="modalTitle"></h2><p id="modalSub" style="color:var(--m)"></p></div>
     <div class="modal-body">
+      <div id="modalPhoto" style="text-align:center;margin-bottom:16px"></div>
       <div id="modalRoster" class="player-grid" style="margin-bottom:16px"></div>
       <h4 style="color:var(--g);margin:12px 0 8px">🏆 夺冠之路</h4><div id="modalRun"></div>
       <div id="modalStats" style="margin-top:12px"></div>
@@ -236,17 +237,20 @@ function renderMatches(matches, limit){
   document.getElementById('panel-summary').innerHTML=html;
   // Worlds showcase with detailed data for modals
   var worldsDetail={
-    2013:{title:'SKT T1 K · 首个S赛冠军',roster:['Impact','Bengi','Faker','Piglet','PoohManDu'],fmvp:'-- (赛前无FMVP奖项)',run:[{s:'QF',o:'Gamania Bears',sc:'2-0'},{s:'SF',o:'Najin Black Sword',sc:'3-2'},{s:'Final',o:'Royal Club',sc:'3-0'}],stats:'小组赛7-1 · 总决赛3-0横扫 · Faker首次参赛即夺冠',location:'洛杉矶 · 斯台普斯中心'},
-    2015:{title:'SKT T1 · 15-1 统治之年',roster:['MaRin','Bengi','Faker','Bang','Wolf'],fmvp:'MaRin',run:[{s:'Group',o:'6-0全胜',sc:''},{s:'QF',o:'AHQ',sc:'3-0'},{s:'SF',o:'Origen',sc:'3-0'},{s:'Final',o:'KOO Tigers',sc:'3-1'}],stats:'全程仅输1小场 · 15胜1负 · 史上最具统治力冠军',location:'柏林 · 梅赛德斯奔驰竞技场'},
-    2016:{title:'SKT T1 · 连冠王朝',roster:['Duke','Bengi','Blank','Faker','Bang','Wolf'],fmvp:'Faker',run:[{s:'Group',o:'5-1',sc:''},{s:'QF',o:'RNG',sc:'3-1'},{s:'SF',o:'ROX Tigers',sc:'3-2'},{s:'Final',o:'Samsung Galaxy',sc:'3-2'}],stats:'史上最精彩BO5(SF vs ROX) · Faker首个FMVP · 卫冕成功',location:'洛杉矶 · 斯台普斯中心'},
-    2023:{title:'T1 · ZOFGK 首冠',roster:['Zeus','Oner','Faker','Gumayusi','Keria'],fmvp:'Zeus',run:[{s:'Swiss',o:'3-1 (TL/GenG/C9/BLG)',sc:''},{s:'QF',o:'LNG',sc:'3-0'},{s:'SF',o:'JDG',sc:'3-1'},{s:'Final',o:'Weibo Gaming',sc:'3-0'}],stats:'淘汰赛11胜1负 · 总决赛横扫 · Faker时隔7年再夺冠',location:'首尔 · 高尺天空巨蛋'},
-    2024:{title:'T1 · 卫冕成功',roster:['Zeus','Oner','Faker','Gumayusi','Keria'],fmvp:'Faker',run:[{s:'Swiss',o:'3-1 (TES/PNG/BLG/G2)',sc:''},{s:'QF',o:'TES',sc:'3-0'},{s:'SF',o:'Gen.G',sc:'3-1'},{s:'Final',o:'BLG',sc:'3-2'}],stats:'决赛1-2落后逆转 · Faker塞拉斯救世 · ZOFGK最后一舞(Zeus/Gumayusi离队前)',location:'伦敦 · O2体育馆'},
-    2025:{title:'T1 · 三连冠王朝',roster:['Doran','Oner','Faker','Gumayusi','Keria'],fmvp:'Gumayusi',run:[{s:'Swiss',o:'3-2 (FLY/CFO/100T/KOI)',sc:''},{s:'QF',o:'AL',sc:'3-2'},{s:'SF',o:'TES',sc:'3-0'},{s:'Final',o:'KT Rolster',sc:'3-2'}],stats:'决赛逆转 · Gumayusi FMVP告别战 · Faker第6冠 · 史无前例三连冠',location:'成都 · 东安湖体育公园'},
+    2013:{title:'SKT T1 K · 首个S赛冠军',photo:'',roster:['Impact','Bengi','Faker','Piglet','PoohManDu'],fmvp:'-- (赛前无FMVP奖项)',run:[{s:'QF',o:'Gamania Bears',sc:'2-0'},{s:'SF',o:'Najin Black Sword',sc:'3-2'},{s:'Final',o:'Royal Club',sc:'3-0'}],stats:'小组赛7-1 · 总决赛3-0横扫 · Faker首次参赛即夺冠',location:'洛杉矶 · 斯台普斯中心'},
+    2015:{title:'SKT T1 · 15-1 统治之年',photo:'',roster:['MaRin','Bengi','Faker','Bang','Wolf'],fmvp:'MaRin',run:[{s:'Group',o:'6-0全胜',sc:''},{s:'QF',o:'AHQ',sc:'3-0'},{s:'SF',o:'Origen',sc:'3-0'},{s:'Final',o:'KOO Tigers',sc:'3-1'}],stats:'全程仅输1小场 · 15胜1负 · 史上最具统治力冠军',location:'柏林 · 梅赛德斯奔驰竞技场'},
+    2016:{title:'SKT T1 · 连冠王朝',photo:'',roster:['Duke','Bengi','Blank','Faker','Bang','Wolf'],fmvp:'Faker',run:[{s:'Group',o:'5-1',sc:''},{s:'QF',o:'RNG',sc:'3-1'},{s:'SF',o:'ROX Tigers',sc:'3-2'},{s:'Final',o:'Samsung Galaxy',sc:'3-2'}],stats:'史上最精彩BO5(SF vs ROX) · Faker首个FMVP · 卫冕成功',location:'洛杉矶 · 斯台普斯中心'},
+    2023:{title:'T1 · ZOFGK 首冠',photo:'https://cdn.oneesports.gg/cdn-data/2023/11/LeagueOfLegends_Worlds2023_T1_Champions_Trophy-1200x675.jpg',roster:['Zeus','Oner','Faker','Gumayusi','Keria'],fmvp:'Zeus',run:[{s:'Swiss',o:'3-1 (TL/GenG/C9/BLG)',sc:''},{s:'QF',o:'LNG',sc:'3-0'},{s:'SF',o:'JDG',sc:'3-1'},{s:'Final',o:'Weibo Gaming',sc:'3-0'}],stats:'淘汰赛11胜1负 · 总决赛横扫 · Faker时隔7年再夺冠',location:'首尔 · 高尺天空巨蛋'},
+    2024:{title:'T1 · 卫冕成功',photo:'https://cdn.oneesports.gg/cdn-data/2024/11/LeagueOfLegends_Worlds2024_T1_Champions_LiftTrophy-1200x675.jpg',roster:['Zeus','Oner','Faker','Gumayusi','Keria'],fmvp:'Faker',run:[{s:'Swiss',o:'3-1 (TES/PNG/BLG/G2)',sc:''},{s:'QF',o:'TES',sc:'3-0'},{s:'SF',o:'Gen.G',sc:'3-1'},{s:'Final',o:'BLG',sc:'3-2'}],stats:'决赛1-2落后逆转 · Faker塞拉斯救世 · ZOFGK最后一舞(Zeus/Gumayusi离队前)',location:'伦敦 · O2体育馆'},
+    2025:{title:'T1 · 三连冠王朝',photo:'',roster:['Doran','Oner','Faker','Gumayusi','Keria'],fmvp:'Gumayusi',run:[{s:'Swiss',o:'3-2 (FLY/CFO/100T/KOI)',sc:''},{s:'QF',o:'AL',sc:'3-2'},{s:'SF',o:'TES',sc:'3-0'},{s:'Final',o:'KT Rolster',sc:'3-2'}],stats:'决赛逆转 · Gumayusi FMVP告别战 · Faker第6冠 · 史无前例三连冠',location:'成都 · 东安湖体育公园'},
   };
   function openWorldsModal(year){
     var w=worldsDetail[year];if(!w)return;
     document.getElementById('modalTitle').textContent=w.title;
     document.getElementById('modalSub').innerHTML='📍 '+w.location+' · 🏆 FMVP: '+w.fmvp;
+    var ph=document.getElementById('modalPhoto');
+    if(w.photo)ph.innerHTML='<img src="'+w.photo+'" style="max-width:100%;max-height:300px;border-radius:8px;border:1px solid #333" alt=\"T1 '+year+' 夺冠\" onerror=\"this.parentElement.innerHTML=\\'<div style=padding:40px;text-align:center;color:var(--m);font-size:3em>🏆</div>\\'\">';
+    else ph.innerHTML='<div style="padding:40px;text-align:center;background:linear-gradient(135deg,rgba(200,169,81,.1),rgba(0,0,0,0));border-radius:8px;border:1px solid #222"><span style="font-size:3em">🏆</span><p style="color:var(--m);margin-top:8px">'+year+' 夺冠时刻</p></div>';
     var rhtml='';w.roster.forEach(function(n){if(PROFILES[n])rhtml+=buildPlayerCard(n,PROFILES[n],0,'modal'+year);});
     document.getElementById('modalRoster').innerHTML=rhtml;
     var runhtml='';w.run.forEach(function(r){runhtml+='<div class="run-item"><span class="stage">'+r.s+'</span><span>'+r.o+'</span><span class="run-score" style="color:'+(r.sc.startsWith('3-')?'#81c784':'#ccc')+'">'+r.sc+'</span></div>';});
@@ -254,7 +258,7 @@ function renderMatches(matches, limit){
     document.getElementById('modalStats').innerHTML='<p style="color:var(--m);line-height:1.6">📊 '+w.stats+'</p>';
     document.getElementById('worldsModal').style.display='flex';
   }
-  var whtml='<h3 class="section-title">👑 历届世界赛成绩 · 点击卡片查看详情</h3><div class="tourney-grid">';
+  var whtml='<h3 class="section-title">👑 历届世界赛成绩</h3><div class="tourney-grid">';
   var wd=[{y:2026,r:'⏳ 待定',d:'冲击史无前例四连冠',c:0,s:'TBD'},{y:2025,r:'🏆 冠军',d:'成都 · 3-2 vs KT Rolster',c:1,s:'Gumayusi FMVP · 三连冠王朝'},{y:2024,r:'🏆 冠军',d:'伦敦 · 3-2 vs BLG',c:1,s:'Faker FMVP · 绝境塞拉斯'},{y:2023,r:'🏆 冠军',d:'首尔 · 3-0 vs WBG',c:1,s:'Zeus FMVP · ZOFGK首冠'},{y:2016,r:'🏆 冠军',d:'洛杉矶 · 3-2 vs SSG',c:1,s:'Faker FMVP · 史上最燃BO5'},{y:2015,r:'🏆 冠军',d:'柏林 · 3-1 vs KOO Tigers',c:1,s:'15胜1负 · 全程统治'},{y:2013,r:'🏆 冠军',d:'洛杉矶 · 3-0 vs Royal Club',c:1,s:'SKT王朝起点 · Faker出道即巅峰'}];
   wd.forEach(function(w){
     var onclick='';
