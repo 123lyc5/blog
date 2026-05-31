@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>T1 数据中心 · 2023-2026</title>
+<title>T1 王朝 · 六冠数据中心</title>
 <style>
 :root{--r:#e10600;--g:#c8a951;--d:#0a0a0a;--c:#111;--b:#222;--t:#ccc;--m:#666}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -101,7 +101,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 
 <div id="cover">
   <div class="trophy">🏆</div>
-  <h1>T1 <span class="red">数据</span>中心</h1>
+  <h1>T1 <span class="red">王朝</span> · 六冠数据中心</h1>
   <div class="stars">★ ★ ★ ★ ★ ★</div>
   <div class="yrs">2013 · 2015 · 2016 · 2023 · 2024 · 2025<br>League of Legends World Champions · SIX TIMES</div>
   <button class="enter-btn" onclick="document.getElementById('cover').classList.add('hidden')">E N T E R</button>
@@ -126,7 +126,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 <div id="panel-2026" style="display:none"></div>
 
 <div class="footer">
-  <p>T1 Data Center · 2023-2026 · Data compiled from Leaguepedia, Liquipedia, Inven Global · <a href="https://github.com/123lyc5/t1-tracker">GitHub</a></p>
+  <p>T1 王朝 · 六冠数据中心 · Data compiled from Leaguepedia, Liquipedia, Inven Global · <a href="https://github.com/123lyc5/t1-tracker">GitHub</a></p>
   <p style="margin-top:4px">Last updated: 2026-05-31</p>
 </div>
 </div>
@@ -176,7 +176,7 @@ function renderMatches(matches, limit){
   const wr=(tw/(tw+tl)*100).toFixed(1);
 
   let html=`
-    <div class="hero"><div class="trophy-icon">👑</div><h2>T1 历年数据中心</h2>
+    <div class="hero"><div class="trophy-icon">👑</div><h2>T1 王朝 · 六冠数据中心</h2>
       <p style="color:var(--m);margin-top:6px">2023 · 2024 · 2025 · 2026</p></div>
     <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin:20px 0">
       ${[2013,2015,2016,2023,2024,2025].map(y=>`<div style="text-align:center;padding:16px 20px;background:linear-gradient(135deg,rgba(200,169,81,.12),rgba(255,215,0,.03));border:2px solid rgba(200,169,81,.25);border-radius:8px"><div style="font-size:2em;font-weight:900;color:var(--g)">${y}</div><div style="color:var(--g);font-size:1em">🏆</div></div>`).join('')}
