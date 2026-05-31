@@ -90,6 +90,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 
 .footer{text-align:center;padding:30px 0;color:var(--m);font-size:.75em;border-top:1px solid #151515;margin-top:30px}
 .footer a{color:var(--r);text-decoration:none}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9998;display:flex;align-items:center;justify-content:center;animation:fadeIn .2s}
+.modal{background:#111;border:2px solid var(--g);border-radius:12px;max-width:700px;width:90%;max-height:85vh;overflow-y:auto;padding:0;animation:slideUp .3s}
+.modal-close{position:sticky;top:0;float:right;background:none;border:none;color:#fff;font-size:1.5em;cursor:pointer;padding:12px 16px;z-index:1}
+.modal-header{background:linear-gradient(135deg,rgba(200,169,81,.2),rgba(0,0,0,0));padding:30px 24px 20px;text-align:center}
+.modal-header h2{font-size:2em;color:var(--g)}
+.modal-body{padding:20px 24px}
+.modal-body .run-item{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #1a1a1a}
+.modal-body .run-item .stage{width:80px;color:var(--m);font-size:.8em}
+.modal-body .run-score{font-weight:900;font-size:1.1em;min-width:40px;text-align:center}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 @media(max-width:640px){
   #cover h1{font-size:1.8em}.hero h2{font-size:1.4em}
@@ -128,6 +140,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 <div id="panel-2024" style="display:none"></div>
 <div id="panel-2025" style="display:none"></div>
 <div id="panel-2026" style="display:none"></div>
+
+<div id="worldsModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal"><button class="modal-close" onclick="document.getElementById('worldsModal').style.display='none'">&times;</button>
+    <div class="modal-header"><h2 id="modalTitle"></h2><p id="modalSub" style="color:var(--m)"></p></div>
+    <div class="modal-body">
+      <div id="modalRoster" class="player-grid" style="margin-bottom:16px"></div>
+      <h4 style="color:var(--g);margin:12px 0 8px">🏆 夺冠之路</h4><div id="modalRun"></div>
+      <div id="modalStats" style="margin-top:12px"></div>
+    </div>
+  </div>
+</div>
 
 <div class="footer">
   <p>T1 王朝 · 六冠数据中心 · Data compiled from Leaguepedia, Liquipedia, Inven Global · <a href="https://github.com/123lyc5/t1-tracker">GitHub</a></p>
@@ -211,11 +234,32 @@ function renderMatches(matches, limit){
   var html='<div class="hero"><div class="trophy-icon">👑</div><h2>T1 王朝 · 六冠数据中心</h2><p style="color:var(--m);margin-top:6px">2023 · 2024 · 2025 · 2026</p></div>';
   html+='<div id="worldsCards"></div>';
   document.getElementById('panel-summary').innerHTML=html;
-  // Worlds showcase - enhanced
-  var wd=[{y:2026,r:'⏳ 待定',d:'冲击史无前例四连冠',c:0,s:'TBD'},{y:2025,r:'🏆 冠军',d:'成都 · 3-2 vs KT Rolster',c:1,s:'Gumayusi FMVP · 三连冠王朝'},{y:2024,r:'🏆 冠军',d:'伦敦 · 3-2 vs BLG',c:1,s:'Faker FMVP · 绝境塞拉斯'},{y:2023,r:'🏆 冠军',d:'首尔 · 3-0 vs WBG',c:1,s:'Zeus FMVP · ZOFGK首冠'},{y:2016,r:'🏆 冠军',d:'洛杉矶 · 3-2 vs SSG',c:1,s:'Faker FMVP · 史上最精彩BO5'},{y:2015,r:'🏆 冠军',d:'柏林 · 3-1 vs KOO Tigers',c:1,s:'15胜1负 · 全程统治'},{y:2013,r:'🏆 冠军',d:'洛杉矶 · 3-0 vs Royal Club',c:1,s:'SKT王朝起点 · Faker出道即巅峰'}];
-  var whtml='<h3 class="section-title">👑 历届世界赛成绩</h3><div class="tourney-grid">';
+  // Worlds showcase with detailed data for modals
+  var worldsDetail={
+    2013:{title:'SKT T1 K · 首个S赛冠军',roster:['Impact','Bengi','Faker','Piglet','PoohManDu'],fmvp:'-- (赛前无FMVP奖项)',run:[{s:'QF',o:'Gamania Bears',sc:'2-0'},{s:'SF',o:'Najin Black Sword',sc:'3-2'},{s:'Final',o:'Royal Club',sc:'3-0'}],stats:'小组赛7-1 · 总决赛3-0横扫 · Faker首次参赛即夺冠',location:'洛杉矶 · 斯台普斯中心'},
+    2015:{title:'SKT T1 · 15-1 统治之年',roster:['MaRin','Bengi','Faker','Bang','Wolf'],fmvp:'MaRin',run:[{s:'Group',o:'6-0全胜',sc:''},{s:'QF',o:'AHQ',sc:'3-0'},{s:'SF',o:'Origen',sc:'3-0'},{s:'Final',o:'KOO Tigers',sc:'3-1'}],stats:'全程仅输1小场 · 15胜1负 · 史上最具统治力冠军',location:'柏林 · 梅赛德斯奔驰竞技场'},
+    2016:{title:'SKT T1 · 连冠王朝',roster:['Duke','Bengi','Blank','Faker','Bang','Wolf'],fmvp:'Faker',run:[{s:'Group',o:'5-1',sc:''},{s:'QF',o:'RNG',sc:'3-1'},{s:'SF',o:'ROX Tigers',sc:'3-2'},{s:'Final',o:'Samsung Galaxy',sc:'3-2'}],stats:'史上最精彩BO5(SF vs ROX) · Faker首个FMVP · 卫冕成功',location:'洛杉矶 · 斯台普斯中心'},
+    2023:{title:'T1 · ZOFGK 首冠',roster:['Zeus','Oner','Faker','Gumayusi','Keria'],fmvp:'Zeus',run:[{s:'Swiss',o:'3-1 (TL/GenG/C9/BLG)',sc:''},{s:'QF',o:'LNG',sc:'3-0'},{s:'SF',o:'JDG',sc:'3-1'},{s:'Final',o:'Weibo Gaming',sc:'3-0'}],stats:'淘汰赛11胜1负 · 总决赛横扫 · Faker时隔7年再夺冠',location:'首尔 · 高尺天空巨蛋'},
+    2024:{title:'T1 · 卫冕成功',roster:['Zeus','Oner','Faker','Gumayusi','Keria'],fmvp:'Faker',run:[{s:'Swiss',o:'3-1 (TES/PNG/BLG/G2)',sc:''},{s:'QF',o:'TES',sc:'3-0'},{s:'SF',o:'Gen.G',sc:'3-1'},{s:'Final',o:'BLG',sc:'3-2'}],stats:'决赛1-2落后逆转 · Faker塞拉斯救世 · ZOFGK最后一舞(Zeus/Gumayusi离队前)',location:'伦敦 · O2体育馆'},
+    2025:{title:'T1 · 三连冠王朝',roster:['Doran','Oner','Faker','Gumayusi','Keria'],fmvp:'Gumayusi',run:[{s:'Swiss',o:'3-2 (FLY/CFO/100T/KOI)',sc:''},{s:'QF',o:'AL',sc:'3-2'},{s:'SF',o:'TES',sc:'3-0'},{s:'Final',o:'KT Rolster',sc:'3-2'}],stats:'决赛逆转 · Gumayusi FMVP告别战 · Faker第6冠 · 史无前例三连冠',location:'成都 · 东安湖体育公园'},
+  };
+  function openWorldsModal(year){
+    var w=worldsDetail[year];if(!w)return;
+    document.getElementById('modalTitle').textContent=w.title;
+    document.getElementById('modalSub').innerHTML='📍 '+w.location+' · 🏆 FMVP: '+w.fmvp;
+    var rhtml='';w.roster.forEach(function(n){if(PROFILES[n])rhtml+=buildPlayerCard(n,PROFILES[n],0,'modal'+year);});
+    document.getElementById('modalRoster').innerHTML=rhtml;
+    var runhtml='';w.run.forEach(function(r){runhtml+='<div class="run-item"><span class="stage">'+r.s+'</span><span>'+r.o+'</span><span class="run-score" style="color:'+(r.sc.startsWith('3-')?'#81c784':'#ccc')+'">'+r.sc+'</span></div>';});
+    document.getElementById('modalRun').innerHTML=runhtml;
+    document.getElementById('modalStats').innerHTML='<p style="color:var(--m);line-height:1.6">📊 '+w.stats+'</p>';
+    document.getElementById('worldsModal').style.display='flex';
+  }
+  var whtml='<h3 class="section-title">👑 历届世界赛成绩 · 点击卡片查看详情</h3><div class="tourney-grid">';
+  var wd=[{y:2026,r:'⏳ 待定',d:'冲击史无前例四连冠',c:0,s:'TBD'},{y:2025,r:'🏆 冠军',d:'成都 · 3-2 vs KT Rolster',c:1,s:'Gumayusi FMVP · 三连冠王朝'},{y:2024,r:'🏆 冠军',d:'伦敦 · 3-2 vs BLG',c:1,s:'Faker FMVP · 绝境塞拉斯'},{y:2023,r:'🏆 冠军',d:'首尔 · 3-0 vs WBG',c:1,s:'Zeus FMVP · ZOFGK首冠'},{y:2016,r:'🏆 冠军',d:'洛杉矶 · 3-2 vs SSG',c:1,s:'Faker FMVP · 史上最燃BO5'},{y:2015,r:'🏆 冠军',d:'柏林 · 3-1 vs KOO Tigers',c:1,s:'15胜1负 · 全程统治'},{y:2013,r:'🏆 冠军',d:'洛杉矶 · 3-0 vs Royal Club',c:1,s:'SKT王朝起点 · Faker出道即巅峰'}];
   wd.forEach(function(w){
-    whtml+='<div class="t-card" style="text-align:center;padding:24px 16px;'+(w.c?'border:2px solid rgba(200,169,81,.5);background:linear-gradient(180deg,rgba(200,169,81,.08),rgba(0,0,0,0))':'opacity:.7')+'"><div style="font-size:.8em;color:var(--m);margin-bottom:4px">'+w.y+'</div><div style="font-size:1.6em;font-weight:900;margin:8px 0;color:'+(w.c?'var(--g)':'var(--m)')+'">'+w.r+'</div><div style="font-size:.85em;color:#ccc;margin:4px 0">'+w.d+'</div><div style="font-size:.75em;color:var(--m);margin-top:6px">'+w.s+'</div></div>';
+    var onclick='';
+    if(w.y<2026)onclick=' onclick="openWorldsModal('+w.y+')"';
+    whtml+='<div class="t-card" style="text-align:center;padding:24px 16px;cursor:'+(w.y<2026?'pointer':'default')+';'+(w.c?'border:2px solid rgba(200,169,81,.5);background:linear-gradient(180deg,rgba(200,169,81,.08),rgba(0,0,0,0))':'opacity:.7')+'"'+onclick+'><div style="font-size:.8em;color:var(--m);margin-bottom:4px">'+w.y+'</div><div style="font-size:1.6em;font-weight:900;margin:8px 0;color:'+(w.c?'var(--g)':'var(--m)')+'">'+w.r+'</div><div style="font-size:.85em;color:#ccc;margin:4px 0">'+w.d+'</div><div style="font-size:.75em;color:var(--m);margin-top:6px">'+w.s+'</div></div>';
   });
   whtml+='</div>';
   document.getElementById('worldsCards').innerHTML=whtml;
