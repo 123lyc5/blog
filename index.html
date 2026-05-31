@@ -6,40 +6,161 @@
   <title>小罗的博客</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-           background: #0d1117; color: #c9d1d9; min-height: 100vh; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0d1117; color: #c9d1d9; min-height: 100vh;
+    }
+
+    /* 导航栏 */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: #161b22; border-bottom: 1px solid #30363d;
+      padding: 0 20px;
+    }
+    nav .nav-inner {
+      max-width: 800px; margin: 0 auto;
+      display: flex; align-items: center; gap: 24px;
+      height: 48px;
+    }
+    nav a {
+      color: #8b949e; text-decoration: none; font-size: 0.95em;
+      transition: color 0.2s;
+    }
+    nav a:hover, nav a.active { color: #58a6ff; }
+    nav .brand { font-weight: 700; color: #f0f6fc; }
+
     .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+
+    /* 头部 */
     header { text-align: center; padding: 60px 0 40px; }
     h1 { font-size: 2.5em; color: #58a6ff; margin-bottom: 10px; }
     .subtitle { color: #8b949e; font-size: 1.1em; }
-    .posts { margin-top: 40px; }
-    .post { background: #161b22; border: 1px solid #30363d; border-radius: 8px;
-            padding: 24px; margin-bottom: 16px; }
-    .post h2 { color: #58a6ff; margin-bottom: 8px; }
-    .post time { color: #8b949e; font-size: 0.9em; }
-    .post p { margin-top: 8px; line-height: 1.6; }
-    footer { text-align: center; padding: 40px 0; color: #8b949e; }
-    a { color: #58a6ff; text-decoration: none; }
+
+    /* 区块标题 */
+    .section-title {
+      font-size: 1.4em; color: #f0f6fc; margin: 40px 0 20px;
+      padding-bottom: 8px; border-bottom: 1px solid #30363d;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    /* 文章卡片 */
+    .posts { margin-top: 20px; }
+    .post {
+      background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+      padding: 24px; margin-bottom: 16px; transition: border-color 0.2s;
+    }
+    .post:hover { border-color: #58a6ff; }
+    .post h2 { color: #58a6ff; margin-bottom: 8px; font-size: 1.2em; }
+    .post time { color: #8b949e; font-size: 0.85em; }
+    .post p { margin-top: 8px; line-height: 1.7; }
+
+    /* 项目卡片 */
+    .projects { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .project-card {
+      background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+      padding: 24px; text-decoration: none; color: #c9d1d9;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .project-card:hover { border-color: #58a6ff; transform: translateY(-2px); }
+    .project-card .icon { font-size: 2em; margin-bottom: 8px; }
+    .project-card h3 { color: #58a6ff; margin-bottom: 6px; }
+    .project-card p { color: #8b949e; font-size: 0.9em; line-height: 1.5; }
+
+    /* 关于我 */
+    .about p { line-height: 1.8; margin-bottom: 12px; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .tag {
+      background: #1f2a3a; color: #58a6ff; border: 1px solid #30363d;
+      padding: 4px 12px; border-radius: 20px; font-size: 0.85em;
+    }
+
+    /* 页脚 */
+    footer { text-align: center; padding: 40px 0; color: #8b949e; border-top: 1px solid #30363d; margin-top: 40px; }
+    footer a { color: #58a6ff; text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .projects { grid-template-columns: 1fr; }
+      h1 { font-size: 1.8em; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>👋 小罗的博客</h1>
-      <p class="subtitle">写点代码笔记，记录一些想法</p>
-    </header>
 
-    <div class="posts">
-      <article class="post">
-        <h2>🚀 博客上线了</h2>
-        <time>2026-05-31</time>
-        <p>今天注册了 GitHub，建立了第一个博客。以后在这里记录学习笔记和项目心得。用 GitHub Pages 托管，纯静态，快如闪电 ⚡</p>
-      </article>
+  <!-- 导航栏 -->
+  <nav>
+    <div class="nav-inner">
+      <span class="brand">🏠 小罗</span>
+      <a href="#posts">📝 文章</a>
+      <a href="#projects">🚀 项目</a>
+      <a href="#about">👤 关于我</a>
+      <a href="https://github.com/123lyc5" target="_blank">🐙 GitHub</a>
+    </div>
+  </nav>
+
+  <!-- 头部 -->
+  <header>
+    <h1>👋 小罗的博客</h1>
+    <p class="subtitle">写点代码笔记，记录一些想法</p>
+  </header>
+
+  <main class="container">
+
+    <!-- 文章区 -->
+    <div id="posts">
+      <h2 class="section-title">📝 最新文章</h2>
+      <div class="posts">
+        <article class="post">
+          <h2>🚀 博客上线了</h2>
+          <time>2026-05-31</time>
+          <p>今天注册了 GitHub，建立了第一个博客，还创建了三个项目仓库。以后在这里记录学习笔记和项目心得。用 GitHub Pages 托管，纯静态，快如闪电 ⚡</p>
+        </article>
+        <article class="post">
+          <h2>🐍 Python 小工具合集</h2>
+          <time>2026-05-31</time>
+          <p>写了一些日常用的 Python 脚本：文件自动归类整理、批量重命名、一键备份。省时省力，随取随用。</p>
+        </article>
+      </div>
     </div>
 
-    <footer>
-      <p>Powered by <a href="https://pages.github.com">GitHub Pages</a> · 123lyc5</p>
-    </footer>
-  </div>
+    <!-- 项目展示 -->
+    <div id="projects">
+      <h2 class="section-title">🚀 我的项目</h2>
+      <div class="projects">
+        <a class="project-card" href="https://github.com/123lyc5/python-tools" target="_blank">
+          <div class="icon">🐍</div>
+          <h3>Python 工具集</h3>
+          <p>文件整理、批量重命名、一键备份等实用脚本</p>
+        </a>
+        <a class="project-card" href="https://github.com/123lyc5/t1-tracker" target="_blank">
+          <div class="icon">🏆</div>
+          <h3>T1 数据追踪器</h3>
+          <p>追踪 LCK 赛程、T1 战绩和 Faker 数据</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- 关于我 -->
+    <div id="about">
+      <h2 class="section-title">👤 关于我</h2>
+      <div class="about">
+        <p>嗨，我是小罗。一个对编程感兴趣的开发者，喜欢用代码解决实际问题。</p>
+        <p>也是 🏆 LCK 观众，T1 和 Faker 的粉丝。</p>
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">Windows</span>
+          <span class="tag">GitHub</span>
+          <span class="tag">LCK</span>
+          <span class="tag">T1 🏆</span>
+          <span class="tag">Faker 👑</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2026 小罗 · Powered by <a href="https://pages.github.com">GitHub Pages</a> · <a href="https://github.com/123lyc5">GitHub</a></p>
+  </footer>
 </body>
 </html>
