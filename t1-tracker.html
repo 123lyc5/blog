@@ -276,11 +276,15 @@ function renderMatches(matches, limit){
     return a.season.localeCompare(b.season);
   });
   if(yd.detailed_matches)allMS.push({season:'2026 Tournaments',matches:yd.detailed_matches});
-  const flatMatches=[];
-  allMS.forEach(sm=>sm.matches.forEach(m=>flatMatches.push(m)));
-  // Split ALL matches into LCK vs International
+  // Attach group season to each match and flatten
   const lckLabelList=['🌸 LCK Spring','☀️ LCK Summer','🇰🇷 LCK Cup','📅 LCK Rounds 1-2','📅 LCK Rounds 3-5'];
   const intlLabelList=['🌍 MSI','⚡ EWC','👑 Worlds'];
+  const flatMatches=[];
+  allMS.forEach(sm=>{
+    sm.matches.forEach(m=>{
+      flatMatches.push({...m, _group: sm.season});
+    });
+  });
   function calcStats(matches){
     let sw=0,sl=0,gw=0,gl=0;
     matches.forEach(m=>{if(m.w)sw++;else sl++;const[g1,g2]=gameWins(m.score||'0-0');gw+=g1;gl+=g2;});
@@ -289,8 +293,8 @@ function renderMatches(matches, limit){
       gr:gw+gl>0?(gw/(gw+gl)*100).toFixed(1):'0.0'};
   }
   const allStats=calcStats(flatMatches);
-  const lckMatches=flatMatches.filter(m=>lckLabelList.includes(m.season));
-  const intlMatches=flatMatches.filter(m=>intlLabelList.includes(m.season));
+  const lckMatches=flatMatches.filter(m=>lckLabelList.includes(m._group));
+  const intlMatches=flatMatches.filter(m=>intlLabelList.includes(m._group));
   const lckStats=calcStats(lckMatches);
   const intlStats=calcStats(intlMatches);
 
