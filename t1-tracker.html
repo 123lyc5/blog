@@ -323,46 +323,7 @@ function renderMatches(matches, limit){
       ${yd.worlds?`<div class="result">${yd.worlds.result} — ${yd.worlds.detail||''}</div>`:''}
       <div class="roster-row">${(yd.roster||[]).map(n=>`<span class="roster-tag">${n}</span>`).join('')}</div></div>
 
-    <h3 class="section-title">📊 ${year} 全年综合战绩</h3>
-    <div class="stat-row">
-      <div class="stat-card"><div class="num">${allStats.total}</div><div class="label">大场</div></div>
-      <div class="stat-card"><div class="num w">${allStats.sw}</div><div class="label">胜</div></div>
-      <div class="stat-card"><div class="num l">${allStats.sl}</div><div class="label">负</div></div>
-      <div class="stat-card"><div class="num wr">${allStats.sr}%</div><div class="label">大场胜率</div></div>
-      <div class="stat-card"><div class="num">${allStats.gtotal}</div><div class="label">小场</div></div>
-      <div class="stat-card"><div class="num w">${allStats.gw}</div><div class="label">小胜</div></div>
-      <div class="stat-card"><div class="num l">${allStats.gl}</div><div class="label">小负</div></div>
-      <div class="stat-card"><div class="num wr">${allStats.gr}%</div><div class="label">小场胜率</div></div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0">
-      <div style="background:var(--c);border:1px solid var(--b);border-radius:6px;padding:14px">
-        <h4 style="color:#58a6ff;margin:0 0 10px">🇰🇷 LCK 国内赛事</h4>
-        <div class="stat-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
-          <div class="stat-card"><div class="num">${lckStats.total}</div><div class="label">大场</div></div>
-          <div class="stat-card"><div class="num w">${lckStats.sw}</div><div class="label">胜</div></div>
-          <div class="stat-card"><div class="num l">${lckStats.sl}</div><div class="label">负</div></div>
-          <div class="stat-card"><div class="num wr">${lckStats.sr}%</div><div class="label">大场</div></div>
-          <div class="stat-card"><div class="num">${lckStats.gtotal}</div><div class="label">小场</div></div>
-          <div class="stat-card"><div class="num w">${lckStats.gw}</div><div class="label">小胜</div></div>
-          <div class="stat-card"><div class="num l">${lckStats.gl}</div><div class="label">小负</div></div>
-          <div class="stat-card"><div class="num wr">${lckStats.gr}%</div><div class="label">小场</div></div>
-        </div>
-      </div>
-      <div style="background:var(--c);border:1px solid var(--b);border-radius:6px;padding:14px">
-        <h4 style="color:var(--g);margin:0 0 10px">🌍 国际赛事</h4>
-        <div class="stat-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
-          <div class="stat-card"><div class="num">${intlStats.total}</div><div class="label">大场</div></div>
-          <div class="stat-card"><div class="num w">${intlStats.sw}</div><div class="label">胜</div></div>
-          <div class="stat-card"><div class="num l">${intlStats.sl}</div><div class="label">负</div></div>
-          <div class="stat-card"><div class="num wr">${intlStats.sr}%</div><div class="label">大场</div></div>
-          <div class="stat-card"><div class="num">${intlStats.gtotal}</div><div class="label">小场</div></div>
-          <div class="stat-card"><div class="num w">${intlStats.gw}</div><div class="label">小胜</div></div>
-          <div class="stat-card"><div class="num l">${intlStats.gl}</div><div class="label">小负</div></div>
-          <div class="stat-card"><div class="num wr">${intlStats.gr}%</div><div class="label">小场</div></div>
-        </div>
-      </div>
-    </div>`;
+`;
 
   // ===== T1 Team Achievement showcase =====
   if (yd.achievements && yd.achievements.length){
