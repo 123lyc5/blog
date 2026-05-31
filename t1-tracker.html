@@ -385,12 +385,16 @@ function renderMatches(matches, limit){
   allSections.forEach(sm=>{
     if(sm.matches.length===0)return;
     const isLck=lckLabels.includes(sm.season);
+    // Split: group stage vs knockout, with smarter detection
     const rsMatches=[], poMatches=[];
+    const groupKw='swiss|group|play.in|play-in|round.robin|regular|rs$|bo3';
+    const koKw='final|semi|quarter|qf$|sf$|upper|lower|lb$|r1$|r2$|r3$|playoff|knockout|po ';
     sm.matches.forEach(m=>{
       const evt=(m.season||m.event||'').toLowerCase();
-      if(evt.includes('po ')||evt.includes('playoff')||evt.includes('final')||evt.includes('upper')||evt.includes('lower')||evt.includes('r1')||evt.includes('r2')||evt.includes('r3')||evt.includes('sf')||evt.includes('lb')){
-        poMatches.push(m);
-      }else{rsMatches.push(m);}
+      if(new RegExp(groupKw).test(evt)){rsMatches.push(m);}
+      else if(new RegExp(koKw).test(evt)){poMatches.push(m);}
+      else if(isLck){rsMatches.push(m);} // LCK default to regular season
+      else{poMatches.push(m);} // International default to knockout
     });
     let rsW=0,rsL=0,rsGW=0,rsGL=0,poW=0,poL=0,poGW=0,poGL=0;
     rsMatches.forEach(m=>{if(m.w)rsW++;else rsL++;const[gw,gl]=gameWins(m.score||'0-0');rsGW+=gw;rsGL+=gl;});
@@ -399,13 +403,15 @@ function renderMatches(matches, limit){
     if(smW+smL===0)return;
 
     const tag=isLck?'🇰🇷':'🌍';
+    const rsLabel=isLck?'常规赛':(sm.season.includes('Worlds')?'瑞士轮/入围赛':'小组赛');
+    const poLabel=isLck?'季后赛/资格赛':'淘汰赛';
     html+=`<h3 class="section-title">${tag} ${sm.season} · ${smW}-${smL} (大场) ${smGW}-${smGL} (小场)</h3>`;
     if(rsMatches.length>0){
-      html+=`<div style="color:var(--m);font-size:.8em;margin:4px 0">${isLck?'常规赛':'小组赛'} ${rsW}-${rsL} (小场${rsGW}-${rsGL})</div>`;
+      html+=`<div style="color:var(--m);font-size:.8em;margin:4px 0">${rsLabel} ${rsW}-${rsL} (小场${rsGW}-${rsGL})</div>`;
       html+=renderMatches(rsMatches.map(m=>({...m,season:'RS'})),rsMatches.length);
     }
     if(poMatches.length>0){
-      html+=`<div style="color:var(--m);font-size:.8em;margin:8px 0 4px">${isLck?'季后赛/资格赛':'淘汰赛'} ${poW}-${poL} (小场${poGW}-${poGL})</div>`;
+      html+=`<div style="color:var(--m);font-size:.8em;margin:8px 0 4px">${poLabel} ${poW}-${poL} (小场${poGW}-${poGL})</div>`;
       html+=renderMatches(poMatches.map(m=>({...m,season:m.event||'PO'})),poMatches.length);
     }
   });
