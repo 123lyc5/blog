@@ -163,6 +163,24 @@ function countMatches(yd){
       });
     }
   });
+  // Count LCK Cup matches
+  if(yd.lck_cup_matches){
+    yd.lck_cup_matches.forEach(x=>{
+      const[gw,gl]=gameWins(x.score);
+      gameW+=gw;gameL+=gl;
+      if(x.w)seriesW++;else seriesL++;
+      m.push({...x,season:'lck_cup'});
+    });
+  }
+  // Count playoff & international matches
+  if(yd.playoff_intl_matches){
+    yd.playoff_intl_matches.forEach(x=>{
+      const[gw,gl]=gameWins(x.score);
+      gameW+=gw;gameL+=gl;
+      if(x.w)seriesW++;else seriesL++;
+      m.push({...x,season:'playoff_intl'});
+    });
+  }
   if(yd.detailed_matches){
     yd.detailed_matches.forEach(x=>{
       const[gw,gl]=gameWins(x.score);
