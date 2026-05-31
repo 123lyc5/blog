@@ -456,7 +456,7 @@ function buildPlayerCard(name, prof, mvpCount, yearContext){
   return `<div class="p-card" id="${id}" onclick="togglePlayer('${id}')">
     <div class="p-cover" style="background:linear-gradient(135deg,${prof.color||'#333'} 0%,#0a0a0a 100%)">
       <div style="font-size:4em;opacity:.6">${role==='Mid'?'🎯':role==='Jungle'?'🌲':role==='Top'?'🛡️':role==='ADC'?'🎯':role==='Support'?'🛡️':'👤'}</div>
-      <div class="p-name-overlay"><div class="pn">${name}${worldCount?` <span style=color:var(--g);font-size:.8em>🏆x${worldCount}</span>`:''}</div><div class="pr">${role}${nickname?' · '+nickname:''}</div></div>
+      <div class="p-name-overlay"><div class="pn">${name}${worldCount?` <span style=color:var(--g);font-size:.8em>🏆x${worldCount}</span>`:''}${prof.departed?` <span style=color:#ef5350;font-size:.7em>已离队</span>`:''}</div><div class="pr">${role}${nickname?' · '+nickname:''}${prof.career?.includes('→')?' 🔄':''}</div></div>
     </div>
     <div class="p-body">
       <div style="display:flex;gap:16px;margin-bottom:6px">
