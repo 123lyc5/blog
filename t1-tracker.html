@@ -399,7 +399,7 @@ function renderMatches(matches, limit){
     if(smW+smL===0)return;
 
     const tag=isLck?'🇰🇷':'🌍';
-    html+=`<h3 class="section-title">${tag} ${sm.season} · ${smW}-${smL} (大场) ${smGW}-${smGL} (小场) · ${smW+smL>0?(smW/(smW+smL)*100).toFixed(0):0}% 胜率</h3>`;
+    html+=`<h3 class="section-title">${tag} ${sm.season} · ${smW}-${smL} (大场) ${smGW}-${smGL} (小场) · ${smW+smL>0?(smW/(smW+smL)*100).toFixed(0):0}%</h3>`;
     if(rsMatches.length>0){
       html+=`<div style="color:var(--m);font-size:.8em;margin:4px 0">${isLck?'常规赛':'小组赛'} ${rsW}-${rsL} (小场${rsGW}-${rsGL})</div>`;
       html+=renderMatches(rsMatches.map(m=>({...m,season:'RS'})),rsMatches.length);
