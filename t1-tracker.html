@@ -317,8 +317,9 @@ function renderMatches(matches, limit){
   const intlStats=calcStats(intlMatches);
 
   let html=`
-    <div class="hero"><div class="trophy-icon">${isChamp?'🏆':'🎯'}</div>
-      <h2>T1 ${year} Season</h2>
+    <div class="hero"${isChamp?' style="border-color:rgba(200,169,81,.4);background:linear-gradient(135deg,rgba(200,169,81,.12),rgba(0,0,0,0),rgba(200,169,81,.08))"':''}>
+      <div class="trophy-icon">${isChamp?'🏆':'🎯'}</div>
+      <h2>${isChamp?`<span style="color:var(--g)">T1 ${year} · S赛冠军</span>`:`T1 ${year} Season`}</h2>
       ${yd.worlds?`<div class="result">${yd.worlds.result} — ${yd.worlds.detail||''}</div>`:''}
       <div class="roster-row">${(yd.roster||[]).map(n=>`<span class="roster-tag">${n}</span>`).join('')}</div></div>
 
@@ -365,8 +366,15 @@ function renderMatches(matches, limit){
 
   // ===== T1 Team Achievement showcase =====
   if (yd.achievements && yd.achievements.length){
+    // Sort: Worlds first, then other international, then LCK
+    const sortedAch=[...yd.achievements].sort((a,b)=>{
+      const aWorlds=a.tournament.includes('Worlds')?0:1;
+      const bWorlds=b.tournament.includes('Worlds')?0:1;
+      if(aWorlds!==bWorlds)return aWorlds-bWorlds;
+      return 0;
+    });
     html+=`<h3 class="section-title">🏆 ${year} 年 T1 完整赛事成绩</h3><div class="tourney-grid">`;
-    yd.achievements.forEach(a=>{
+    sortedAch.forEach(a=>{
       const isWorlds=a.tournament.includes('Worlds')&&a.result.includes('CHAMPION');
       html+=`<div class="t-card" style="${isWorlds?'border-color:rgba(200,169,81,.5)':''}">
         <h4>${a.tournament}</h4>
@@ -441,7 +449,11 @@ function renderMatches(matches, limit){
     });
   }
 
-  // 国际赛事单独展示
+  // 国际赛事单独展示 - Worlds 优先
+  intlSections.sort((a,b)=>{
+    const order={'👑 Worlds':0,'🌍 MSI':1,'⚡ EWC':2};
+    return (order[a.season]||9)-(order[b.season]||9);
+  });
   intlSections.forEach(sm=>{
     if(sm.matches.length>0){
       let iw=0,il=0,igw=0,igl=0;
