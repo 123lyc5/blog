@@ -116,11 +116,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
   <button class="tab-btn" onclick="switchTab('2025',event)">2025 🏆</button>
   <button class="tab-btn" onclick="switchTab('2024',event)">2024 🏆</button>
   <button class="tab-btn" onclick="switchTab('2023',event)">2023 🏆</button>
+  <button class="tab-btn" onclick="switchTab('legacy',event)">王朝 🏆</button>
 </div>
 
 <div id="panel-summary"></div>
 <div id="panel-players" style="display:none"></div>
 <div id="panel-2023" style="display:none"></div>
+<div id="panel-legacy" style="display:none"></div>
 <div id="panel-2024" style="display:none"></div>
 <div id="panel-2025" style="display:none"></div>
 <div id="panel-2026" style="display:none"></div>
@@ -138,9 +140,9 @@ const PROFILES = {"Faker": {"photo": "", "color": "#e10600", "role": "Mid", "bir
 function switchTab(year,evt){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   if(evt&&evt.target)evt.target.closest('.tab-btn').classList.add('active');
-  else{const idx={summary:0,players:1,'2026':2,'2025':3,'2024':4,'2023':5}[year]||0;
+  else{const idx={summary:0,players:1,'2026':2,'2025':3,'2024':4,'2023':5,legacy:6}[year]||0;
     const btns=document.querySelectorAll('.tab-btn');if(btns[idx])btns[idx].classList.add('active');}
-  ['summary','players','2023','2024','2025','2026'].forEach(y=>{
+  ['summary','players','2023','2024','2025','2026','legacy'].forEach(y=>{
     document.getElementById('panel-'+y).style.display=y===year?'block':'none';
   });
 }
@@ -489,6 +491,36 @@ function togglePlayer(id){
   });
   html+=`</div>`;
   document.getElementById('panel-players').innerHTML=html;
+})();
+
+// ===== BUILD LEGACY PANEL (2013/2015/2016) =====
+(function(){
+  const legacy={
+    2013:{roster:['Impact','Bengi','Faker','Piglet','PoohManDu'],coach:'kkOma',
+      achievements:[{t:'OGN Summer',r:'冠军',d:'3-2 vs KT Bullets (Faker出道即巅峰)'},{t:'Worlds 2013',r:'🏆 冠军',d:'3-0 vs Royal Club (SKT首冠)'}]},
+    2015:{roster:['MaRin','Bengi','Faker','Bang','Wolf'],coach:'kkOma',
+      achievements:[{t:'LCK Spring',r:'冠军',d:'3-0 vs GE Tigers'},{t:'LCK Summer',r:'冠军',d:'3-0 vs KT Rolster'},{t:'Worlds 2015',r:'🏆 冠军',d:'3-1 vs KOO Tigers (15-1统治)'}]},
+    2016:{roster:['Duke','Bengi','Faker','Bang','Wolf'],coach:'kkOma',
+      achievements:[{t:'LCK Spring',r:'冠军',d:'3-1 vs ROX Tigers'},{t:'MSI 2016',r:'冠军',d:'3-0 vs CLG (Faker MSI MVP)'},{t:'Worlds 2016',r:'🏆 冠军',d:'3-2 vs SSG (Faker FMVP, 史上最精彩BO5)'}]},
+  };
+  let html=`<div class="hero"><div class="trophy-icon">👑</div><h2>T1 王朝起源 · SKT T1 时代</h2>
+    <p style="color:var(--m);margin-top:6px">2013 · 2015 · 2016 — 奠定王朝的三座S赛冠军</p>
+    <p style="color:var(--m);font-size:.75em;margin-top:4px;padding:4px 12px;background:rgba(255,255,255,.02);border:1px solid #222;border-radius:4px;display:inline-block">仅统计赛事成绩，不含逐场比赛记录</p></div>`;
+
+  Object.entries(legacy).forEach(([year,ld])=>{
+    html+=`<h3 class="section-title">🏆 ${year} Season · ${ld.coach?'Coach: '+ld.coach:'SKT T1'}</h3>
+    <div class="tourney-grid">
+      ${ld.achievements.map(a=>{
+        const w=a.r.includes('冠军')&&a.t.includes('Worlds');
+        return`<div class="t-card" style="${w?'border-color:rgba(200,169,81,.4)':''}">
+          <h4>${a.t}</h4><div style="font-size:1.1em;font-weight:900;color:${w?'var(--g)':'#fff'}">${a.r}</div>
+          <div class="detail">${a.d}</div></div>`;
+      }).join('')}
+    </div>
+    <div class="roster-row" style="margin:12px 0 20px;display:flex;gap:6px;flex-wrap:wrap">${ld.roster.map(n=>`<span class="roster-tag">${n}</span>`).join('')}</div>`;
+  });
+
+  document.getElementById('panel-legacy').innerHTML=html;
 })();
 </script>
 </body>
