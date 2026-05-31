@@ -206,43 +206,15 @@ function renderMatches(matches, limit){
 
 // ===== BUILD SUMMARY =====
 (function(){
-  let tw=0,tl=0,tgw=0,tgl=0;
-  Object.values(D).forEach(yd=>{const s=countMatches(yd);tw+=s.seriesW;tl+=s.seriesL;tgw+=s.gameW;tgl+=s.gameL;});
-  const swr=(tw/(tw+tl)*100).toFixed(1);
-  const gwr=(tgw/(tgw+tgl)*100).toFixed(1);
-
-  let html=`
-    <div class="hero"><div class="trophy-icon">👑</div><h2>T1 王朝 · 六冠数据中心</h2>
-      <p style="color:var(--m);margin-top:6px">2023 · 2024 · 2025 · 2026</p>
-    <p style="color:var(--m);font-size:.75em;margin-top:4px;padding:4px 12px;background:rgba(255,255,255,.02);border:1px solid #222;border-radius:4px;display:inline-block">⚠️ 统计仅覆盖已有比赛记录，部分赛事数据待补全</p></div>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin:20px 0">
-      ${[2013,2015,2016,2023,2024,2025].map(y=>`<div style="text-align:center;padding:16px 20px;background:linear-gradient(135deg,rgba(200,169,81,.12),rgba(255,215,0,.03));border:2px solid rgba(200,169,81,.25);border-radius:8px"><div style="font-size:2em;font-weight:900;color:var(--g)">${y}</div><div style="color:var(--g);font-size:1em">🏆</div></div>`).join('')}
-    </div>
-    <div class="stat-row">
-      <div class="stat-card"><div class="num" style="color:var(--g)">6</div><div class="label">S赛冠军</div></div>
-      <div class="stat-card"><div class="num w">${tw}</div><div class="label">大场胜</div></div>
-      <div class="stat-card"><div class="num l">${tl}</div><div class="label">大场负</div></div>
-      <div class="stat-card"><div class="num wr">${swr}%</div><div class="label">大场胜率</div></div>
-      <div class="stat-card"><div class="num">${tgw+tgl}</div><div class="label">小场数</div></div>
-      <div class="stat-card"><div class="num w">${tgw}</div><div class="label">小场胜</div></div>
-      <div class="stat-card"><div class="num l">${tgl}</div><div class="label">小场负</div></div>
-      <div class="stat-card"><div class="num wr">${gwr}%</div><div class="label">小场胜率</div></div>
-      <div class="stat-card"><div class="num" style="color:#58a6ff">4</div><div class="label">赛季</div></div>
-      <div class="stat-card"><div class="num" style="color:#ce93d8">${Object.keys(PROFILES).length}</div><div class="label">选手</div></div>
-    </div>
-    <div class="tourney-grid">
-      ${Object.entries(D).map(([year,yd])=>{
-        const s=countMatches(yd);
-        const worlds=yd.worlds?yd.worlds.result:'';
-        const isChamp=worlds.includes('冠军');
-        const sTot=s.seriesW+s.seriesL;
-        const gTot=s.gameW+s.gameL;
-        return`<div class="t-card"><h4>${year} ${isChamp?'🏆':''}</h4>
-          <div style="font-size:1.3em;font-weight:900;color:${isChamp?'var(--g)':'#fff'}">${isChamp?'S赛冠军':worlds||'--'}</div>
-          <div class="detail">大场: ${s.seriesW}-${s.seriesL} (${sTot>0?(s.seriesW/sTot*100).toFixed(0):0}%)<br>小场: ${s.gameW}-${s.gameL} (${gTot>0?(s.gameW/gTot*100).toFixed(0):0}%)<br>Roster: ${(yd.roster||[]).join(' · ')}</div></div>`;
-      }).join('')}
-    </div>`;
+  var html='<div class="hero"><div class="trophy-icon">👑</div><h2>T1 王朝 · 六冠数据中心</h2><p style="color:var(--m);margin-top:6px">2023 · 2024 · 2025 · 2026</p></div>';
+  html+='<div id="worldsCards"></div>';
   document.getElementById('panel-summary').innerHTML=html;
+  // Worlds cards - safe JS after DOM ready
+  var wd=[{y:2026,r:'待定',d:'冲击四连冠',c:0},{y:2025,r:'🏆 冠军',d:'3-2 vs KT (三连冠!)',c:1},{y:2024,r:'🏆 冠军',d:'3-2 vs BLG (卫冕)',c:1},{y:2023,r:'🏆 冠军',d:'3-0 vs WBG (ZOFGK首冠)',c:1},{y:2016,r:'🏆 冠军',d:'3-2 vs SSG (Faker FMVP)',c:1},{y:2015,r:'🏆 冠军',d:'3-1 vs KOO Tigers (15-1统治)',c:1},{y:2013,r:'🏆 冠军',d:'3-0 vs Royal Club (SKT首冠)',c:1}];
+  var whtml='<h3 class="section-title">👑 历届世界赛成绩</h3><div class="tourney-grid">';
+  wd.forEach(function(w){whtml+='<div class="t-card" style="text-align:center;'+(w.c?'border-color:rgba(200,169,81,.5)':'')+'"><h4>'+w.y+'</h4><div style="font-size:1.3em;font-weight:900;color:'+(w.c?'var(--g)':'#fff')+'">'+w.r+'</div><div class="detail">'+w.d+'</div></div>';});
+  whtml+='</div>';
+  document.getElementById('worldsCards').innerHTML=whtml;
 })();
 
 // ===== BUILD YEAR PANELS =====
