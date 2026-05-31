@@ -146,17 +146,32 @@ function switchTab(year,evt){
 }
 
 // ===== 统计函数 =====
+function gameWins(score){
+  // Parse "2-1" -> [2,1], BO5 "3-2" -> [3,2]
+  const parts=score.split('-').map(Number);
+  return parts.length===2?parts:[0,0];
+}
 function countMatches(yd){
-  let w=0,l=0,m=[];
+  let seriesW=0,seriesL=0,gameW=0,gameL=0,m=[];
   ['spring','summer','rounds_1_2','rounds_3_5'].forEach(k=>{
     if(yd[k]&&yd[k].matches){
-      yd[k].matches.forEach(x=>{if(x.w)w++;else l++;m.push({...x,season:k});});
+      yd[k].matches.forEach(x=>{
+        const[gw,gl]=gameWins(x.score);
+        gameW+=gw;gameL+=gl;
+        if(x.w)seriesW++;else seriesL++;
+        m.push({...x,season:k});
+      });
     }
   });
   if(yd.detailed_matches){
-    yd.detailed_matches.forEach(x=>{if(x.w)w++;else l++;m.push({...x,season:'tournament'});});
+    yd.detailed_matches.forEach(x=>{
+      const[gw,gl]=gameWins(x.score);
+      gameW+=gw;gameL+=gl;
+      if(x.w)seriesW++;else seriesL++;
+      m.push({...x,season:'tournament'});
+    });
   }
-  return {w,l,total:w+l,matches:m};
+  return {seriesW,seriesL,gameW,gameL,total:seriesW+seriesL,gameTotal:gameW+gameL,matches:m};
 }
 
 function renderMatches(matches, limit){
@@ -171,9 +186,10 @@ function renderMatches(matches, limit){
 
 // ===== BUILD SUMMARY =====
 (function(){
-  let tw=0,tl=0;
-  Object.values(D).forEach(yd=>{const s=countMatches(yd);tw+=s.w;tl+=s.l;});
-  const wr=(tw/(tw+tl)*100).toFixed(1);
+  let tw=0,tl=0,tgw=0,tgl=0;
+  Object.values(D).forEach(yd=>{const s=countMatches(yd);tw+=s.seriesW;tl+=s.seriesL;tgw+=s.gameW;tgl+=s.gameL;});
+  const swr=(tw/(tw+tl)*100).toFixed(1);
+  const gwr=(tgw/(tgw+tgl)*100).toFixed(1);
 
   let html=`
     <div class="hero"><div class="trophy-icon">👑</div><h2>T1 王朝 · 六冠数据中心</h2>
@@ -183,9 +199,12 @@ function renderMatches(matches, limit){
     </div>
     <div class="stat-row">
       <div class="stat-card"><div class="num" style="color:var(--g)">6</div><div class="label">S赛冠军</div></div>
-      <div class="stat-card"><div class="num w">${tw}</div><div class="label">总胜场</div></div>
-      <div class="stat-card"><div class="num l">${tl}</div><div class="label">总负场</div></div>
-      <div class="stat-card"><div class="num wr">${wr}%</div><div class="label">总胜率</div></div>
+      <div class="stat-card"><div class="num w">${tw}</div><div class="label">大场胜</div></div>
+      <div class="stat-card"><div class="num l">${tl}</div><div class="label">大场负</div></div>
+      <div class="stat-card"><div class="num wr">${swr}%</div><div class="label">大场胜率</div></div>
+      <div class="stat-card"><div class="num w">${tgw}</div><div class="label">小场胜</div></div>
+      <div class="stat-card"><div class="num l">${tgl}</div><div class="label">小场负</div></div>
+      <div class="stat-card"><div class="num wr">${gwr}%</div><div class="label">小场胜率</div></div>
       <div class="stat-card"><div class="num" style="color:#58a6ff">4</div><div class="label">赛季</div></div>
       <div class="stat-card"><div class="num" style="color:#ce93d8">${Object.keys(PROFILES).length}</div><div class="label">选手</div></div>
     </div>
@@ -194,9 +213,11 @@ function renderMatches(matches, limit){
         const s=countMatches(yd);
         const worlds=yd.worlds?yd.worlds.result:'';
         const isChamp=worlds.includes('CHAMPION');
+        const sTot=s.seriesW+s.seriesL;
+        const gTot=s.gameW+s.gameL;
         return`<div class="t-card"><h4>${year} ${isChamp?'🏆':''}</h4>
           <div style="font-size:1.3em;font-weight:900;color:${isChamp?'var(--g)':'#fff'}">${isChamp?'S赛冠军':worlds||'--'}</div>
-          <div class="detail">战绩: ${s.w}-${s.l} (${(s.w/(s.w+s.l)*100).toFixed(0)}%)<br>Roster: ${(yd.roster||[]).join(' · ')}</div></div>`;
+          <div class="detail">大场: ${s.seriesW}-${s.seriesL} (${sTot>0?(s.seriesW/sTot*100).toFixed(0):0}%)<br>小场: ${s.gameW}-${s.gameL} (${gTot>0?(s.gameW/gTot*100).toFixed(0):0}%)<br>Roster: ${(yd.roster||[]).join(' · ')}</div></div>`;
       }).join('')}
     </div>`;
   document.getElementById('panel-summary').innerHTML=html;
@@ -256,9 +277,15 @@ function renderMatches(matches, limit){
   if(yd.detailed_matches)allMS.push({season:'2026 Tournaments',matches:yd.detailed_matches});
   const flatMatches=[];
   allMS.forEach(sm=>sm.matches.forEach(m=>flatMatches.push(m)));
-  // Count ALL matches including playoffs/intl
-  const totalW=flatMatches.filter(m=>m.w).length;
-  const totalL=flatMatches.filter(m=>!m.w).length;
+  // Count ALL matches - both series and game level
+  const seriesW=flatMatches.filter(m=>m.w).length;
+  const seriesL=flatMatches.filter(m=>!m.w).length;
+  let gameW=0,gameL=0;
+  flatMatches.forEach(m=>{
+    const[gw,gl]=gameWins(m.score||'0-0');
+    gameW+=gw;gameL+=gl;
+  });
+
   let html=`
     <div class="hero"><div class="trophy-icon">${isChamp?'🏆':'🎯'}</div>
       <h2>T1 ${year} Season</h2>
@@ -266,10 +293,14 @@ function renderMatches(matches, limit){
       <div class="roster-row">${(yd.roster||[]).map(n=>`<span class="roster-tag">${n}</span>`).join('')}</div></div>
 
     <div class="stat-row">
-      <div class="stat-card"><div class="num w">${totalW}</div><div class="label">总胜场</div></div>
-      <div class="stat-card"><div class="num l">${totalL}</div><div class="label">总负场</div></div>
-      <div class="stat-card"><div class="num wr">${(totalW/(totalW+totalL)*100).toFixed(1)}%</div><div class="label">综合胜率</div></div>
-      <div class="stat-card"><div class="num">${totalW+totalL}</div><div class="label">总场次</div></div>
+      <div class="stat-card"><div class="num w">${seriesW}</div><div class="label">大场胜</div></div>
+      <div class="stat-card"><div class="num l">${seriesL}</div><div class="label">大场负</div></div>
+      <div class="stat-card"><div class="num wr">${(seriesW/(seriesW+seriesL)*100).toFixed(1)}%</div><div class="label">大场胜率</div></div>
+      <div class="stat-card"><div class="num">${seriesW+seriesL}</div><div class="label">总系列赛</div></div>
+      <div class="stat-card"><div class="num w" style="font-size:1.5em">${gameW}</div><div class="label">小场胜</div></div>
+      <div class="stat-card"><div class="num l" style="font-size:1.5em">${gameL}</div><div class="label">小场负</div></div>
+      <div class="stat-card"><div class="num wr">${(gameW/(gameW+gameL)*100).toFixed(1)}%</div><div class="label">小场胜率</div></div>
+      <div class="stat-card"><div class="num">${gameW+gameL}</div><div class="label">总小场</div></div>
       <div class="stat-card"><div class="num" style="color:var(--g)">${Object.keys(yd.mvps||{}).length}</div><div class="label">MVP得主</div></div></div>`;
 
   // ===== T1 Team Achievement showcase =====
