@@ -410,10 +410,14 @@ function renderMatches(matches, limit){
     });
   }
 
-  // 国际赛事单独展示 - Worlds 优先
+  // 国际赛事: 按首场比赛日期排序
+  intlSections.forEach(sm=>{
+    sm.matches.sort((a,b)=>a.date.localeCompare(b.date));
+  });
   intlSections.sort((a,b)=>{
-    const order={'👑 Worlds':0,'🌍 MSI':1,'⚡ EWC':2};
-    return (order[a.season]||9)-(order[b.season]||9);
+    const da=a.matches[0]?.date||'9999';
+    const db=b.matches[0]?.date||'9999';
+    return da.localeCompare(db);
   });
   intlSections.forEach(sm=>{
     if(sm.matches.length>0){
