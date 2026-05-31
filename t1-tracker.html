@@ -475,31 +475,24 @@ function togglePlayer(id){
 
 // ===== BUILD LEGACY PANEL (2013/2015/2016) =====
 (function(){
-  const legacy={
-    2013:{roster:['Impact','Bengi','Faker','Piglet','PoohManDu'],coach:'kkOma',
-      achievements:[{t:'OGN Summer',r:'冠军',d:'3-2 vs KT Bullets (Faker出道即巅峰)'},{t:'Worlds 2013',r:'🏆 冠军',d:'3-0 vs Royal Club (SKT首冠)'}]},
-    2015:{roster:['MaRin','Bengi','Faker','Bang','Wolf'],coach:'kkOma',
-      achievements:[{t:'LCK Spring',r:'冠军',d:'3-0 vs GE Tigers'},{t:'LCK Summer',r:'冠军',d:'3-0 vs KT Rolster'},{t:'Worlds 2015',r:'🏆 冠军',d:'3-1 vs KOO Tigers (15-1统治)'}]},
-    2016:{roster:['Duke','Bengi','Faker','Bang','Wolf'],coach:'kkOma',
-      achievements:[{t:'LCK Spring',r:'冠军',d:'3-1 vs ROX Tigers'},{t:'MSI 2016',r:'冠军',d:'3-0 vs CLG (Faker MSI MVP)'},{t:'Worlds 2016',r:'🏆 冠军',d:'3-2 vs SSG (Faker FMVP, 史上最精彩BO5)'}]},
-  };
-  let html=`<div class="hero"><div class="trophy-icon">👑</div><h2>T1 王朝起源 · SKT T1 时代</h2>
-    <p style="color:var(--m);margin-top:6px">2013 · 2015 · 2016 — 奠定王朝的三座S赛冠军</p>
-    <p style="color:var(--m);font-size:.75em;margin-top:4px;padding:4px 12px;background:rgba(255,255,255,.02);border:1px solid #222;border-radius:4px;display:inline-block">仅统计赛事成绩，不含逐场比赛记录</p></div>`;
-
-  Object.entries(legacy).forEach(([year,ld])=>{
-    html+=`<h3 class="section-title">🏆 ${year} Season · ${ld.coach?'Coach: '+ld.coach:'SKT T1'}</h3>
-    <div class="tourney-grid">
-      ${ld.achievements.map(a=>{
-        const w=a.r.includes('冠军')&&a.t.includes('Worlds');
-        return`<div class="t-card" style="${w?'border-color:rgba(200,169,81,.4)':''}">
-          <h4>${a.t}</h4><div style="font-size:1.1em;font-weight:900;color:${w?'var(--g)':'#fff'}">${a.r}</div>
-          <div class="detail">${a.d}</div></div>`;
-      }).join('')}
-    </div>
-    <div class="roster-row" style="margin:12px 0 20px;display:flex;gap:6px;flex-wrap:wrap">${ld.roster.map(n=>`<span class="roster-tag">${n}</span>`).join('')}</div>`;
+  var html='<div class="hero"><div class="trophy-icon">👑</div><h2>T1 王朝起源 · SKT T1 时代</h2><p style="color:var(--m);margin-top:6px">2013 · 2015 · 2016 — 三座S赛冠军奠基王朝</p></div>';
+  var years=[
+    {y:2013,coach:'kkOma',roster:['Impact','Bengi','Faker','Piglet','PoohManDu'],
+      a:[{t:'OGN Summer',r:'冠军',d:'3-2 vs KT Bullets',w:0},{t:'Worlds 2013',r:'🏆 冠军',d:'3-0 vs Royal Club (SKT首冠)',w:1}]},
+    {y:2015,coach:'kkOma',roster:['MaRin','Bengi','Faker','Easyhoon','Bang','Wolf'],
+      a:[{t:'LCK Spring',r:'冠军',d:'3-0 vs GE Tigers',w:0},{t:'LCK Summer',r:'冠军',d:'3-0 vs KT Rolster',w:0},{t:'Worlds 2015',r:'🏆 冠军',d:'3-1 vs KOO (15-1统治)',w:1}]},
+    {y:2016,coach:'kkOma',roster:['Duke','Bengi','Blank','Faker','Bang','Wolf'],
+      a:[{t:'LCK Spring',r:'冠军',d:'3-1 vs ROX',w:0},{t:'MSI 2016',r:'冠军',d:'3-0 vs CLG',w:0},{t:'Worlds 2016',r:'🏆 冠军',d:'3-2 vs SSG (Faker FMVP)',w:1}]}
+  ];
+  years.forEach(function(ld){
+    html+='<h3 class="section-title">🏆 '+ld.y+' · Coach: '+ld.coach+'</h3><div class="tourney-grid">';
+    ld.a.forEach(function(a){
+      html+='<div class="t-card" style="'+(a.w?'border-color:rgba(200,169,81,.4)':'')+'"><h4>'+a.t+'</h4><div style="font-size:1.1em;font-weight:900;color:'+(a.w?'var(--g)':'#fff')+'">'+a.r+'</div><div class="detail">'+a.d+'</div></div>';
+    });
+    html+='</div><div class="player-grid">';
+    ld.roster.forEach(function(n){if(PROFILES[n])html+=buildPlayerCard(n,PROFILES[n],0,'legacy');});
+    html+='</div>';
   });
-
   document.getElementById('panel-legacy').innerHTML=html;
 })();
 
@@ -519,8 +512,8 @@ function togglePlayer(id){
     html+='<div class="tourney-grid">';
     td.a.forEach(function(a){html+='<div class="t-card"><h4>'+a.t+'</h4><div style="font-size:1.1em;font-weight:900;color:#fff">'+a.r+'</div>'+(a.d?'<div class="detail">'+a.d+'</div>':'')+'</div>';});
     html+='</div>';
-    html+='<div class="roster-row" style="margin:8px 0 16px;display:flex;gap:6px;flex-wrap:wrap">';
-    td.r.forEach(function(n){html+='<span class="roster-tag">'+n+'</span>';});
+    html+='<div class="player-grid">';
+    td.r.forEach(function(n){if(PROFILES[n])html+=buildPlayerCard(n,PROFILES[n],0,'transition');});
     html+='</div>';
   });
   document.getElementById('panel-transition').innerHTML=html;
