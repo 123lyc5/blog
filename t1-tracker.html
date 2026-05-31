@@ -148,7 +148,7 @@ function switchTab(year,evt){
 // ===== 统计函数 =====
 function countMatches(yd){
   let w=0,l=0,m=[];
-  ['spring','summer'].forEach(k=>{
+  ['spring','summer','rounds_1_2','rounds_3_5'].forEach(k=>{
     if(yd[k]&&yd[k].matches){
       yd[k].matches.forEach(x=>{if(x.w)w++;else l++;m.push({...x,season:k});});
     }
