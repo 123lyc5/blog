@@ -202,6 +202,7 @@ function renderMatches(matches, limit){
       <div class="stat-card"><div class="num w">${tw}</div><div class="label">大场胜</div></div>
       <div class="stat-card"><div class="num l">${tl}</div><div class="label">大场负</div></div>
       <div class="stat-card"><div class="num wr">${swr}%</div><div class="label">大场胜率</div></div>
+      <div class="stat-card"><div class="num">${tgw+tgl}</div><div class="label">小场数</div></div>
       <div class="stat-card"><div class="num w">${tgw}</div><div class="label">小场胜</div></div>
       <div class="stat-card"><div class="num l">${tgl}</div><div class="label">小场负</div></div>
       <div class="stat-card"><div class="num wr">${gwr}%</div><div class="label">小场胜率</div></div>
@@ -293,15 +294,15 @@ function renderMatches(matches, limit){
       <div class="roster-row">${(yd.roster||[]).map(n=>`<span class="roster-tag">${n}</span>`).join('')}</div></div>
 
     <div class="stat-row">
+      <div class="stat-card"><div class="num">${seriesW+seriesL}</div><div class="label">大场数</div></div>
       <div class="stat-card"><div class="num w">${seriesW}</div><div class="label">大场胜</div></div>
       <div class="stat-card"><div class="num l">${seriesL}</div><div class="label">大场负</div></div>
-      <div class="stat-card"><div class="num wr">${(seriesW/(seriesW+seriesL)*100).toFixed(1)}%</div><div class="label">大场胜率</div></div>
-      <div class="stat-card"><div class="num">${seriesW+seriesL}</div><div class="label">总系列赛</div></div>
-      <div class="stat-card"><div class="num w" style="font-size:1.5em">${gameW}</div><div class="label">小场胜</div></div>
-      <div class="stat-card"><div class="num l" style="font-size:1.5em">${gameL}</div><div class="label">小场负</div></div>
-      <div class="stat-card"><div class="num wr">${(gameW/(gameW+gameL)*100).toFixed(1)}%</div><div class="label">小场胜率</div></div>
-      <div class="stat-card"><div class="num">${gameW+gameL}</div><div class="label">总小场</div></div>
-</div>`;
+      <div class="stat-card"><div class="num wr">${seriesW+seriesL>0?(seriesW/(seriesW+seriesL)*100).toFixed(1):0}%</div><div class="label">大场胜率</div></div>
+      <div class="stat-card"><div class="num">${gameW+gameL}</div><div class="label">小场数</div></div>
+      <div class="stat-card"><div class="num w">${gameW}</div><div class="label">小场胜</div></div>
+      <div class="stat-card"><div class="num l">${gameL}</div><div class="label">小场负</div></div>
+      <div class="stat-card"><div class="num wr">${gameW+gameL>0?(gameW/(gameW+gameL)*100).toFixed(1):0}%</div><div class="label">小场胜率</div></div>
+    </div>`;
 
   // ===== T1 Team Achievement showcase =====
   if (yd.achievements && yd.achievements.length){
