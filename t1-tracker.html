@@ -348,19 +348,6 @@ function renderMatches(matches, limit){
   }
 
 
-  // Legacy tournament cards (for backward compat)
-  html+=`<div class="tourney-grid">`;
-  if(yd.lck_cup)html+=`<div class="t-card"><h4>🏆 LCK Cup</h4><div class="detail">${yd.lck_cup.result}<br>${yd.lck_cup.detail}</div></div>`;
-  if(yd.first_stand)html+=`<div class="t-card"><h4>🌍 First Stand</h4><div class="detail">${yd.first_stand.result}<br>${yd.first_stand.detail}</div></div>`;
-  if(yd.spring)html+=`<div class="t-card"><h4>🌸 LCK Spring</h4><div style="font-size:1.2em;font-weight:900;color:var(--g)">${yd.spring.w}-${yd.spring.l}</div><div class="detail">Rank: ${yd.spring.rank}<br>Playoffs: ${yd.spring.playoff||''}</div></div>`;
-  if(yd.msi&&!yd.rounds_1_2)html+=`<div class="t-card"><h4>🌍 MSI</h4><div class="detail">${yd.msi.result}<br>${yd.msi.detail||''}</div></div>`;
-  if(yd.ewc&&!yd.rounds_1_2)html+=`<div class="t-card"><h4>⚡ EWC</h4><div class="detail">${yd.ewc.result}<br>${yd.ewc.detail||''}</div></div>`;
-  if(yd.summer)html+=`<div class="t-card"><h4>☀️ LCK Summer</h4><div style="font-size:1.2em;font-weight:900;color:var(--g)">${yd.summer.w}-${yd.summer.l}</div><div class="detail">Rank: ${yd.summer.rank}<br>Playoffs: ${yd.summer.playoff||''}</div></div>`;
-  if(yd.rounds_1_2&&yd.rounds_1_2.w)html+=`<div class="t-card"><h4>📅 Rounds 1-2</h4><div style="font-size:1.2em;font-weight:900;color:var(--g)">${yd.rounds_1_2.w}-${yd.rounds_1_2.l}</div><div class="detail">Rank: ${yd.rounds_1_2.rank||''}<br>${yd.rounds_1_2.detail||''}</div></div>`;
-  if(yd.rounds_3_5&&yd.rounds_3_5.w)html+=`<div class="t-card"><h4>📅 Rounds 3-5</h4><div style="font-size:1.2em;font-weight:900;color:var(--g)">${yd.rounds_3_5.w}-${yd.rounds_3_5.l}</div><div class="detail">Rank: ${yd.rounds_3_5.rank||''}<br>${yd.rounds_3_5.detail||''}</div></div>`;
-  html+=`</div>`;
-
-
   // ===== 合并所有LCK赛事为一个整体 =====
   const lckLabels=['🌸 LCK Spring','☀️ LCK Summer','🇰🇷 LCK Cup','📅 LCK Rounds 1-2','📅 LCK Rounds 3-5'];
   const intlOrder2=['🌍 MSI','⚡ EWC','👑 Worlds'];
@@ -370,6 +357,21 @@ function renderMatches(matches, limit){
     if(lckLabels.includes(sm.season)) lckSections.push(sm);
     else if(intlOrder2.includes(sm.season)) intlSections.push(sm);
     else lckSections.push(sm); // fallback
+  });
+
+  // Sort all sections by first match date
+  [...lckSections,...intlSections].forEach(sm=>{
+    sm.matches.sort((a,b)=>a.date.localeCompare(b.date));
+  });
+  lckSections.sort((a,b)=>{
+    const da=a.matches[0]?.date||'9999';
+    const db=b.matches[0]?.date||'9999';
+    return da.localeCompare(db);
+  });
+  intlSections.sort((a,b)=>{
+    const da=a.matches[0]?.date||'9999';
+    const db=b.matches[0]?.date||'9999';
+    return da.localeCompare(db);
   });
 
   // 先展示合并的LCK总体 + 各阶段细分
@@ -410,15 +412,6 @@ function renderMatches(matches, limit){
     });
   }
 
-  // 国际赛事: 按首场比赛日期排序
-  intlSections.forEach(sm=>{
-    sm.matches.sort((a,b)=>a.date.localeCompare(b.date));
-  });
-  intlSections.sort((a,b)=>{
-    const da=a.matches[0]?.date||'9999';
-    const db=b.matches[0]?.date||'9999';
-    return da.localeCompare(db);
-  });
   intlSections.forEach(sm=>{
     if(sm.matches.length>0){
       let iw=0,il=0,igw=0,igl=0;
