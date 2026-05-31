@@ -209,7 +209,23 @@ function renderMatches(matches, limit){
   const isChamp=yd.worlds&&yd.worlds.result.includes('CHAMPION');
   const allMS=[];
   ['spring','summer'].forEach(k=>{if(yd[k]&&yd[k].matches)allMS.push({season:'LCK '+k,matches:yd[k].matches});});
-  if(yd.playoff_intl_matches)allMS.push({season:'Playoffs/Intl',matches:yd.playoff_intl_matches.map(m=>({date:m.date,opp:m.opp,score:m.score,w:m.w,season:m.event}))});
+  if(yd.playoff_intl_matches){
+    const groupNames={'LCK Spring':'🌸 LCK Spring Playoffs','LCK Summer':'☀️ LCK Summer Playoffs',
+      'LCK Cup':'🏆 LCK Cup Playoffs','MSI':'🌍 MSI','EWC':'🏆 EWC',
+      'Worlds':'🏆 Worlds'};
+    const groups={};
+    yd.playoff_intl_matches.forEach(m=>{
+      let key='Other';
+      for(const [prefix,label] of Object.entries(groupNames)){
+        if((m.event||'').startsWith(prefix)){key=label;break;}
+      }
+      if(!groups[key])groups[key]=[];
+      groups[key].push({date:m.date,opp:m.opp,score:m.score,w:m.w,season:m.event});
+    });
+    Object.entries(groups).forEach(([label,matches])=>{
+      allMS.push({season:label,matches});
+    });
+  }
   if(yd.detailed_matches)allMS.push({season:'2026 Tournaments',matches:yd.detailed_matches});
   const flatMatches=[];
   allMS.forEach(sm=>sm.matches.forEach(m=>flatMatches.push(m)));
