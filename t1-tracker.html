@@ -236,7 +236,7 @@ function renderMatches(matches, limit){
   html+='<div id="worldsCards"></div>';
   document.getElementById('panel-summary').innerHTML=html;
   // Worlds showcase with detailed data for modals
-  var worldsDetail={
+  window.worldsDetail={
     2013:{title:'SKT T1 K · 首个S赛冠军',photo:'',roster:['Impact','Bengi','Faker','Piglet','PoohManDu'],fmvp:'-- (赛前无FMVP奖项)',run:[{s:'QF',o:'Gamania Bears',sc:'2-0'},{s:'SF',o:'Najin Black Sword',sc:'3-2'},{s:'Final',o:'Royal Club',sc:'3-0'}],stats:'小组赛7-1 · 总决赛3-0横扫 · Faker首次参赛即夺冠',location:'洛杉矶 · 斯台普斯中心'},
     2015:{title:'SKT T1 · 15-1 统治之年',photo:'',roster:['MaRin','Bengi','Faker','Bang','Wolf'],fmvp:'MaRin',run:[{s:'Group',o:'6-0全胜',sc:''},{s:'QF',o:'AHQ',sc:'3-0'},{s:'SF',o:'Origen',sc:'3-0'},{s:'Final',o:'KOO Tigers',sc:'3-1'}],stats:'全程仅输1小场 · 15胜1负 · 史上最具统治力冠军',location:'柏林 · 梅赛德斯奔驰竞技场'},
     2016:{title:'SKT T1 · 连冠王朝',photo:'',roster:['Duke','Bengi','Blank','Faker','Bang','Wolf'],fmvp:'Faker',run:[{s:'Group',o:'5-1',sc:''},{s:'QF',o:'RNG',sc:'3-1'},{s:'SF',o:'ROX Tigers',sc:'3-2'},{s:'Final',o:'Samsung Galaxy',sc:'3-2'}],stats:'史上最精彩BO5(SF vs ROX) · Faker首个FMVP · 卫冕成功',location:'洛杉矶 · 斯台普斯中心'},
@@ -244,8 +244,9 @@ function renderMatches(matches, limit){
     2024:{title:'T1 · 卫冕成功',photo:'https://cdn.oneesports.gg/cdn-data/2024/11/LeagueOfLegends_Worlds2024_T1_Champions_LiftTrophy-1200x675.jpg',roster:['Zeus','Oner','Faker','Gumayusi','Keria'],fmvp:'Faker',run:[{s:'Swiss',o:'3-1 (TES/PNG/BLG/G2)',sc:''},{s:'QF',o:'TES',sc:'3-0'},{s:'SF',o:'Gen.G',sc:'3-1'},{s:'Final',o:'BLG',sc:'3-2'}],stats:'决赛1-2落后逆转 · Faker塞拉斯救世 · ZOFGK最后一舞(Zeus/Gumayusi离队前)',location:'伦敦 · O2体育馆'},
     2025:{title:'T1 · 三连冠王朝',photo:'',roster:['Doran','Oner','Faker','Gumayusi','Keria'],fmvp:'Gumayusi',run:[{s:'Swiss',o:'3-2 (FLY/CFO/100T/KOI)',sc:''},{s:'QF',o:'AL',sc:'3-2'},{s:'SF',o:'TES',sc:'3-0'},{s:'Final',o:'KT Rolster',sc:'3-2'}],stats:'决赛逆转 · Gumayusi FMVP告别战 · Faker第6冠 · 史无前例三连冠',location:'成都 · 东安湖体育公园'},
   };
-  function openWorldsModal(year){
-    var w=worldsDetail[year];if(!w)return;
+  // Define globally so onclick can access it
+  window.openWorldsModal=function(year){
+    var w=window.worldsDetail[year];if(!w)return;
     document.getElementById('modalTitle').textContent=w.title;
     document.getElementById('modalSub').innerHTML='📍 '+w.location+' · 🏆 FMVP: '+w.fmvp;
     var ph=document.getElementById('modalPhoto');
