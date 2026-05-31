@@ -1,276 +1,302 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>T1 数据中心 · 2023-2026</title>
 <style>
-:root{--red:#e10600;--gold:#c8a951;--dark:#0a0a0a;--card:#111;--border:#222;--text:#ccc;--muted:#666}
+:root{--r:#e10600;--g:#c8a951;--d:#0a0a0a;--c:#111;--b:#222;--t:#ccc;--m:#666}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--dark);color:var(--text);overflow-x:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--d);color:var(--t);overflow-x:hidden}
 
-/* ===== COVER PAGE ===== */
+/* COVER */
 #cover{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;
-       background:linear-gradient(180deg,#000 0%,#1a0000 30%,#0a0a0a 60%,#000 100%);
-       transition:opacity .6s,visibility .6s}
+  background:linear-gradient(180deg,#000 0%,#1a0000 30%,#0a0a0a 60%,#000 100%);transition:opacity .6s,visibility .6s}
 #cover.hidden{opacity:0;visibility:hidden;pointer-events:none}
 #cover .trophy{font-size:5em;animation:float 3s ease-in-out infinite;margin-bottom:10px}
 #cover h1{font-size:3em;color:#fff;text-align:center;letter-spacing:2px}
-#cover h1 .red{color:var(--red)}
-#cover .stars{color:var(--gold);font-size:1.5em;margin:10px 0;letter-spacing:8px}
-#cover .years{color:var(--muted);font-size:1em;margin:8px 0 20px;letter-spacing:4px}
-#cover .enter-btn{padding:14px 50px;background:transparent;border:2px solid var(--red);color:var(--red);
-                   font-size:1.1em;cursor:pointer;letter-spacing:3px;transition:all .3s;border-radius:2px}
-#cover .enter-btn:hover{background:var(--red);color:#fff;box-shadow:0 0 30px rgba(225,6,0,.4)}
-#cover .roster-gallery{display:flex;gap:6px;margin:20px 0;flex-wrap:wrap;justify-content:center}
-#cover .roster-chip{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
-                    padding:6px 16px;border-radius:20px;font-size:.85em;color:var(--muted)}
+#cover h1 .red{color:var(--r)}
+#cover .stars{color:var(--g);font-size:1.5em;margin:10px 0;letter-spacing:8px}
+#cover .yrs{color:var(--m);font-size:1em;margin:8px 0 20px;letter-spacing:4px;text-align:center}
+#cover .enter-btn{padding:14px 50px;background:transparent;border:2px solid var(--r);color:var(--r);
+  font-size:1.1em;cursor:pointer;letter-spacing:3px;transition:all .3s;border-radius:2px}
+#cover .enter-btn:hover{background:var(--r);color:#fff;box-shadow:0 0 30px rgba(225,6,0,.4)}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 
-/* ===== MAIN ===== */
-.container{max-width:1000px;margin:0 auto;padding:20px}
+.container{max-width:1100px;margin:0 auto;padding:20px}
 
-/* ===== TABS ===== */
-.tab-bar{display:flex;gap:0;margin:30px 0 20px;border-bottom:2px solid #1a1a1a;overflow-x:auto}
-.tab-btn{padding:12px 28px;background:none;border:none;color:var(--muted);font-size:1em;
-         cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;
-         transition:all .2s;white-space:nowrap}
+/* TABS */
+.tab-bar{display:flex;gap:0;margin:20px 0;border-bottom:2px solid #1a1a1a;overflow-x:auto}
+.tab-btn{padding:12px 24px;background:none;border:none;color:var(--m);font-size:.95em;
+  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;white-space:nowrap}
 .tab-btn:hover{color:#fff}
-.tab-btn.active{color:var(--red);border-bottom-color:var(--red)}
-.tab-btn .badge{font-size:.7em;background:var(--red);color:#fff;padding:2px 6px;border-radius:10px;margin-left:4px;vertical-align:top}
+.tab-btn.active{color:var(--r);border-bottom-color:var(--r)}
+.tab-btn .badge{font-size:.7em;background:var(--r);color:#fff;padding:2px 6px;border-radius:10px;margin-left:4px}
 
-/* ===== HERO BANNER ===== */
-.year-hero{text-align:center;padding:40px 20px 30px;margin-bottom:25px;
-           background:linear-gradient(135deg,rgba(225,6,0,.1) 0%,rgba(0,0,0,0) 50%,rgba(200,169,81,.1) 100%);
-           border:1px solid #1a1a1a;border-radius:4px;position:relative;overflow:hidden}
-.year-hero .trophy-icon{font-size:3em;margin-bottom:8px}
-.year-hero h2{font-size:2.2em;color:#fff}
-.year-hero .result{font-size:1.3em;color:var(--gold);margin:8px 0}
-.year-hero .result .champ{color:var(--gold);font-weight:900}
-.year-hero .photo{max-width:100%;max-height:300px;margin-top:16px;border-radius:4px;opacity:.9;border:2px solid #222}
-.year-hero .roster-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px}
-.year-hero .roster-tag{background:rgba(255,255,255,.08);border:1px solid #333;padding:5px 14px;border-radius:20px;font-size:.85em}
+/* CARDS */
+.hero{text-align:center;padding:30px 20px;margin-bottom:20px;
+  background:linear-gradient(135deg,rgba(225,6,0,.08),rgba(0,0,0,0),rgba(200,169,81,.08));
+  border:1px solid #1a1a1a;border-radius:4px}
+.hero .trophy-icon{font-size:2.5em}
+.hero h2{font-size:2em;color:#fff;margin:6px 0}
+.hero .result{font-size:1.2em;color:var(--g);margin:6px 0}
+.hero .roster-row{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:10px}
+.hero .roster-tag{background:rgba(255,255,255,.06);border:1px solid #333;padding:4px 12px;border-radius:16px;font-size:.82em}
 
-/* ===== STATS GRID ===== */
-.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:20px 0}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:18px;text-align:center}
-.stat-card .num{font-size:2.2em;font-weight:900}
-.stat-card .num.w{color:#4caf50}.stat-card .num.l{color:var(--red)}.stat-card .num.wr{color:var(--gold)}
-.stat-card .label{color:var(--muted);font-size:.8em;margin-top:4px}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:16px 0}
+.stat-card{background:var(--c);border:1px solid var(--b);border-radius:6px;padding:14px;text-align:center}
+.stat-card .num{font-size:2em;font-weight:900}.stat-card .num.w{color:#4caf50}.stat-card .num.l{color:var(--r)}.stat-card .num.wr{color:var(--g)}
+.stat-card .label{color:var(--m);font-size:.78em;margin-top:3px}
 
-/* ===== TOURNAMENT CARDS ===== */
-.tourney-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:20px 0}
-.tourney-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:20px}
-.tourney-card h4{color:var(--red);margin-bottom:8px;font-size:.95em}
-.tourney-card .record{font-size:1.5em;font-weight:900;margin-bottom:6px}
-.tourney-card .detail{color:var(--muted);font-size:.8em;line-height:1.6}
+.section-title{font-size:1.1em;color:var(--r);margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid #1a1a1a}
 
-/* ===== MATCH TABLE ===== */
-table{width:100%;border-collapse:collapse;font-size:.9em;margin:15px 0}
-th,td{padding:9px 12px;text-align:left;border-bottom:1px solid #151515}
-th{color:var(--muted);font-weight:600;font-size:.78em;text-transform:uppercase}
-tr:hover{background:rgba(255,255,255,.02)}
-.result-win{color:#81c784;font-weight:700}
-.result-loss{color:#ef5350;font-weight:700}
-.mvp-tag{color:var(--gold);font-size:.85em}
+.tourney-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:14px 0}
+.t-card{background:var(--c);border:1px solid var(--b);border-radius:6px;padding:16px}
+.t-card h4{color:var(--r);font-size:.9em;margin-bottom:6px}
+.t-card .detail{color:var(--m);font-size:.8em;line-height:1.6}
 
-/* ===== SUMMARY PAGE SPECIAL ===== */
-.champ-timeline{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin:25px 0}
-.champ-badge{text-align:center;padding:20px 24px;background:linear-gradient(135deg,rgba(200,169,81,.15),rgba(255,215,0,.05));
-             border:2px solid rgba(200,169,81,.3);border-radius:8px;min-width:80px}
-.champ-badge .year-num{font-size:2.5em;font-weight:900;color:var(--gold)}
-.champ-badge .star{color:var(--gold);font-size:1.2em}
+/* TABLE */
+.match-table{width:100%;border-collapse:collapse;font-size:.85em;margin:10px 0}
+.match-table th,.match-table td{padding:7px 10px;text-align:left;border-bottom:1px solid #151515}
+.match-table th{color:var(--m);font-weight:600;font-size:.75em;text-transform:uppercase}
+.match-table tr:hover{background:rgba(255,255,255,.02)}
+.w-tag{color:#81c784;font-weight:700}.l-tag{color:#ef5350;font-weight:700}
+.mvp-tag{color:var(--g);font-size:.8em}
 
-.footer{text-align:center;padding:40px 0;color:var(--muted);font-size:.8em;border-top:1px solid #151515;margin-top:30px}
-.footer a{color:var(--red);text-decoration:none}
+/* PLAYER CARDS */
+.player-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:14px 0}
+.p-card{background:var(--c);border:1px solid var(--b);border-radius:8px;padding:16px;text-align:center}
+.p-card .p-name{font-size:1.1em;font-weight:700;color:#fff;margin-bottom:4px}
+.p-card .p-role{color:var(--m);font-size:.75em;margin-bottom:8px}
+.p-card .p-stat{display:flex;justify-content:center;gap:16px;margin:6px 0}
+.p-card .p-stat-item{text-align:center}
+.p-card .p-stat-val{font-size:1.3em;font-weight:900}
+.p-card .p-stat-val.g{color:var(--g)}.p-card .p-stat-val.r{color:var(--r)}
+.p-card .p-stat-lbl{font-size:.7em;color:var(--m)}
+.p-card .p-worlds{color:var(--g);font-size:.75em;margin-top:4px}
+.p-card .p-years{color:var(--m);font-size:.7em;margin-top:2px}
+
+/* YEAR TABS in player section */
+.ptabs{display:flex;gap:4px;margin:8px 0;flex-wrap:wrap}
+.ptab{padding:3px 10px;background:rgba(255,255,255,.05);border:1px solid #222;border-radius:12px;
+  color:var(--m);font-size:.72em;cursor:pointer;transition:all .2s}
+.ptab:hover,.ptab.active{color:var(--r);border-color:var(--r)}
+
+.footer{text-align:center;padding:30px 0;color:var(--m);font-size:.75em;border-top:1px solid #151515;margin-top:30px}
+.footer a{color:var(--r);text-decoration:none}
 
 @media(max-width:640px){
-  #cover h1{font-size:1.8em}
-  .year-hero h2{font-size:1.5em}
-  .tab-btn{padding:10px 16px;font-size:.85em}
+  #cover h1{font-size:1.8em}.hero h2{font-size:1.4em}
+  .tab-btn{padding:10px 14px;font-size:.8em}
 }
 </style>
 </head>
 <body>
 
-<!-- ===== COVER ===== -->
 <div id="cover">
   <div class="trophy">🏆</div>
   <h1>T1 <span class="red">数据</span>中心</h1>
   <div class="stars">★ ★ ★ ★ ★</div>
-  <div class="years" id="coverYears"></div>
-  <div class="roster-gallery" id="coverRoster"></div>
-  <button class="enter-btn" onclick="enterDashboard()">E N T E R</button>
+  <div class="yrs">2013 · 2015 · 2016 · 2023 · 2024<br>League of Legends World Champions</div>
+  <button class="enter-btn" onclick="document.getElementById('cover').classList.add('hidden')">E N T E R</button>
 </div>
 
-<!-- ===== MAIN ===== -->
 <div class="container" id="mainContent">
 
-<!-- TABS -->
 <div class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('summary',event)">📊 总览</button>
+  <button class="tab-btn" onclick="switchTab('players',event)">👤 选手</button>
   <button class="tab-btn" onclick="switchTab('2026',event)">2026 <span class="badge">LIVE</span></button>
   <button class="tab-btn" onclick="switchTab('2025',event)">2025</button>
   <button class="tab-btn" onclick="switchTab('2024',event)">2024 🏆</button>
   <button class="tab-btn" onclick="switchTab('2023',event)">2023 🏆</button>
 </div>
 
-<!-- CONTENT PANELS -->
 <div id="panel-summary"></div>
-<div id="panel-2026" style="display:none"></div>
-<div id="panel-2025" style="display:none"></div>
-<div id="panel-2024" style="display:none"></div>
+<div id="panel-players" style="display:none"></div>
 <div id="panel-2023" style="display:none"></div>
+<div id="panel-2024" style="display:none"></div>
+<div id="panel-2025" style="display:none"></div>
+<div id="panel-2026" style="display:none"></div>
 
 <div class="footer">
-  <p>T1 Data Center · 2023-2026 · Data from Leaguepedia & Esports News · <a href="https://github.com/123lyc5/t1-tracker">GitHub</a></p>
+  <p>T1 Data Center · 2023-2026 · Data compiled from Leaguepedia, Liquipedia, Inven Global · <a href="https://github.com/123lyc5/t1-tracker">GitHub</a></p>
   <p style="margin-top:4px">Last updated: 2026-05-31</p>
 </div>
-
 </div>
 
 <script>
-const SEASONS = {"2023": {"spring": {"w": 17, "l": 1, "rank": "1st", "playoff": "Runner-up (1-3 vs Gen.G)"}, "msi": "3rd-4th (2-3 vs JDG, 3-1 vs BLG)", "summer": {"w": 9, "l": 9, "rank": "5th", "playoff": "Runner-up (0-3 vs Gen.G)"}, "worlds": "🏆 CHAMPION (3-0 WBG)", "roster": ["Zeus", "Oner", "Faker", "Gumayusi", "Keria"], "worlds_photo": "https://w.namu.la/s/5fe6373a2e0de5ccb34d2f2a35dcd91f75ca55484e7da78311732e6bb67eec391dc90e4b30f57e00a5d7aa632cb5f853b71ba60d48f9ef7a36237082cd6b17441c7001e24d79a6f87b6e08cc55e8e06e3062a10a38c8a7cd9ae2494db12e4e24"}, "2024": {"spring": {"w": 15, "l": 3, "rank": "2nd", "playoff": "Runner-up (1-3 vs Gen.G)"}, "msi": "3rd (2-3 vs BLG)", "ewc": "🏆 EWC Champion (3-1 TES)", "summer": {"w": 11, "l": 7, "rank": "3rd", "playoff": "3rd (3-0 DK)"}, "worlds": "🏆 CHAMPION (3-2 BLG)", "roster": ["Zeus", "Oner", "Faker", "Gumayusi", "Keria"], "worlds_photo": "https://cdn.oneesports.gg/cdn-data/2024/11/LeagueOfLegends_Worlds2024_T1_Champions_LiftTrophy-1200x675.jpg"}, "2025": {"lck_cup": "🏆 Champion (3-2 vs Gen.G)", "first_stand": "Runner-up (2-3 vs HLE)", "spring": {"w": 13, "l": 5, "rank": "2nd", "playoff": "Runner-up (1-3 vs Gen.G)"}, "msi": "Runner-up (2-3 vs Gen.G)", "summer": {"w": 10, "l": 8, "rank": "4th", "playoff": "Semifinals"}, "worlds": "Top 8 (Quarterfinals)", "roster": ["Doran", "Oner", "Faker", "Gumayusi", "Smash"], "worlds_photo": ""}, "2026": {"lck_cup": "Group 5-0, Playoffs 4th (1-3 BFX, 2-3 DK)", "rounds_1_2": "12-4 (ongoing, as of May 30)", "roster": ["Doran", "Oner", "Faker", "Peyz", "Keria"], "worlds_photo": "", "matches": [{"date": "2026-01-16", "team1": "T1", "team2": "Hanwha Life", "score": "2-1", "mvp": "Faker MVP", "winner": "T1", "tournament": "LCK Cup - Group Stage"}, {"date": "2026-01-18", "team1": "T1", "team2": "DRX", "score": "2-1", "mvp": "", "winner": "T1", "tournament": "LCK Cup - Group Stage"}, {"date": "2026-01-24", "team1": "T1", "team2": "KT Rolster", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Cup - Group Stage"}, {"date": "2026-01-25", "team1": "T1", "team2": "BNK FearX", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Cup - Group Stage"}, {"date": "2026-01-31", "team1": "T1", "team2": "Dplus Kia", "score": "3-0", "mvp": "Doran MVP", "winner": "T1", "tournament": "LCK Cup - Group Stage"}, {"date": "2026-02-15", "team1": "T1", "team2": "BNK FearX", "score": "1-3", "mvp": "", "winner": "BNK FearX", "tournament": "LCK Cup - Playoffs"}, {"date": "2026-02-22", "team1": "T1", "team2": "Dplus Kia", "score": "2-3", "mvp": "", "winner": "Dplus Kia", "tournament": "LCK Cup - Playoffs"}, {"date": "2026-04-01", "team1": "T1", "team2": "KT Rolster", "score": "0-2", "mvp": "", "winner": "KT Rolster", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-04", "team1": "T1", "team2": "Hanwha Life", "score": "2-0", "mvp": "Faker MVP", "winner": "T1", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-08", "team1": "T1", "team2": "Gen.G", "score": "0-2", "mvp": "", "winner": "Gen.G", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-10", "team1": "T1", "team2": "DN SOOPers", "score": "2-0", "mvp": "Gumayusi MVP", "winner": "T1", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-17", "team1": "T1", "team2": "Dplus Kia", "score": "1-2", "mvp": "", "winner": "Dplus Kia", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-19", "team1": "T1", "team2": "Kiwoom DRX", "score": "2-0", "mvp": "Doran MVP", "winner": "T1", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-25", "team1": "T1", "team2": "HANJIN BRION", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-26", "team1": "T1", "team2": "BNK FearX", "score": "2-0", "mvp": "Oner MVP", "winner": "T1", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-29", "team1": "T1", "team2": "NS RedForce", "score": "2-0", "mvp": "Oner POM", "winner": "T1", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-01", "team1": "T1", "team2": "Hanwha Life", "score": "1-2", "mvp": "", "winner": "Hanwha Life", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-08", "team1": "T1", "team2": "DN SOOPers", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-10", "team1": "T1", "team2": "HANJIN BRION", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-13", "team1": "T1", "team2": "NS RedForce", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-16", "team1": "T1", "team2": "Gen.G", "score": "2-1", "mvp": "Peyz MVP", "winner": "T1", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-28", "team1": "T1", "team2": "KT Rolster", "score": "2-0", "mvp": "", "winner": "T1", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-30", "team1": "T1", "team2": "BNK FearX", "score": "2-0", "mvp": "Oner POM", "winner": "T1", "tournament": "LCK Rounds 1-2"}]}};
-const SUMMARY = {"worlds_titles": 5, "worlds_years": "2013 · 2015 · 2016 · 2023 · 2024", "total_wins": 92, "total_losses": 39, "winrate": 70.2};
-const CHAMPIONS = [2013, 2015, 2016, 2023, 2024];
+const D = {"2023": {"roster": ["Zeus", "Oner", "Faker", "Gumayusi", "Keria"], "spring": {"w": 17, "l": 1, "rank": "1st", "playoff": "Runner-up (1-3 vs Gen.G)", "matches": [{"date": "2023-01-18", "opp": "Gen.G", "score": "2-0", "w": true}, {"date": "2023-01-20", "opp": "KT Rolster", "score": "2-1", "w": true}, {"date": "2023-01-26", "opp": "Kwangdong Freecs", "score": "2-0", "w": true}, {"date": "2023-01-28", "opp": "Dplus KIA", "score": "2-1", "w": true}, {"date": "2023-02-02", "opp": "Hanwha Life", "score": "1-2", "w": false}, {"date": "2023-02-04", "opp": "Nongshim RedForce", "score": "2-1", "w": true}, {"date": "2023-02-08", "opp": "BRION", "score": "2-0", "w": true}, {"date": "2023-02-12", "opp": "DRX", "score": "2-0", "w": true}, {"date": "2023-02-17", "opp": "Liiv SANDBOX", "score": "2-1", "w": true}, {"date": "2023-02-19", "opp": "Gen.G", "score": "2-1", "w": true}, {"date": "2023-02-23", "opp": "Liiv SANDBOX", "score": "2-0", "w": true}, {"date": "2023-02-25", "opp": "KT Rolster", "score": "2-0", "w": true}, {"date": "2023-03-01", "opp": "Kwangdong Freecs", "score": "2-0", "w": true}, {"date": "2023-03-03", "opp": "BRION", "score": "2-0", "w": true}, {"date": "2023-03-09", "opp": "DRX", "score": "2-0", "w": true}, {"date": "2023-03-11", "opp": "Hanwha Life", "score": "2-1", "w": true}, {"date": "2023-03-16", "opp": "Dplus KIA", "score": "2-0", "w": true}, {"date": "2023-03-19", "opp": "Nongshim RedForce", "score": "2-0", "w": true}]}, "msi": {"result": "3rd-4th", "detail": "2-3 vs JDG, 3-1 vs BLG"}, "summer": {"w": 9, "l": 9, "rank": "5th", "playoff": "Runner-up (0-3 vs Gen.G)", "note": "Faker wrist injury mid-season, T1 went 1-7 without him", "matches": [{"date": "2023-06-09", "opp": "Hanwha Life", "score": "2-1", "w": true}, {"date": "2023-06-11", "opp": "Gen.G", "score": "1-2", "w": false}, {"date": "2023-06-15", "opp": "Liiv SANDBOX", "score": "2-0", "w": true}, {"date": "2023-06-17", "opp": "BRION", "score": "2-0", "w": true}, {"date": "2023-06-21", "opp": "Kwangdong Freecs", "score": "2-0", "w": true}, {"date": "2023-06-24", "opp": "KT Rolster", "score": "0-2", "w": false}, {"date": "2023-06-30", "opp": "Dplus KIA", "score": "2-0", "w": true}, {"date": "2023-07-02", "opp": "Nongshim RedForce", "score": "2-1", "w": true}, {"date": "2023-07-05", "opp": "DRX", "score": "0-2", "w": false}, {"date": "2023-07-08", "opp": "Gen.G", "score": "0-2", "w": false}, {"date": "2023-07-14", "opp": "Nongshim RedForce", "score": "2-0", "w": true}, {"date": "2023-07-16", "opp": "Dplus KIA", "score": "0-2", "w": false}, {"date": "2023-07-21", "opp": "Hanwha Life", "score": "0-2", "w": false}, {"date": "2023-07-23", "opp": "BRION", "score": "1-2", "w": false}, {"date": "2023-07-27", "opp": "DRX", "score": "1-2", "w": false}, {"date": "2023-07-29", "opp": "KT Rolster", "score": "0-2", "w": false}, {"date": "2023-08-02", "opp": "Kwangdong Freecs", "score": "2-0", "w": true}, {"date": "2023-08-04", "opp": "Liiv SANDBOX", "score": "2-1", "w": true}]}, "worlds": {"result": "🏆 CHAMPION", "detail": "3-0 vs Weibo Gaming", "roster": ["Zeus", "Oner", "Faker", "Gumayusi", "Keria"]}, "mvps": {"Faker": 8, "Oner": 6, "Gumayusi": 5, "Keria": 4, "Zeus": 3}}, "2024": {"roster": ["Zeus", "Oner", "Faker", "Gumayusi", "Keria"], "spring": {"w": 15, "l": 3, "rank": "2nd", "playoff": "Runner-up (1-3 vs Gen.G)", "matches": [{"date": "2024-01-17", "opp": "Gen.G", "score": "2-1", "w": true}, {"date": "2024-01-19", "opp": "KT Rolster", "score": "2-0", "w": true}, {"date": "2024-01-25", "opp": "Kwangdong Freecs", "score": "2-0", "w": true}, {"date": "2024-01-27", "opp": "Dplus KIA", "score": "2-0", "w": true}, {"date": "2024-01-31", "opp": "DRX", "score": "2-0", "w": true}, {"date": "2024-02-02", "opp": "Hanwha Life", "score": "1-2", "w": false}, {"date": "2024-02-08", "opp": "Nongshim RedForce", "score": "2-0", "w": true}, {"date": "2024-02-15", "opp": "FearX", "score": "2-0", "w": true}, {"date": "2024-02-17", "opp": "BRION", "score": "2-0", "w": true}, {"date": "2024-02-23", "opp": "Gen.G", "score": "0-2", "w": false}, {"date": "2024-02-25", "opp": "KT Rolster", "score": "2-1", "w": true}, {"date": "2024-03-01", "opp": "Dplus KIA", "score": "2-0", "w": true}, {"date": "2024-03-07", "opp": "Kwangdong Freecs", "score": "2-0", "w": true}, {"date": "2024-03-09", "opp": "Hanwha Life", "score": "2-1", "w": true}, {"date": "2024-03-14", "opp": "DRX", "score": "2-0", "w": true}, {"date": "2024-03-16", "opp": "Nongshim RedForce", "score": "2-0", "w": true}, {"date": "2024-03-21", "opp": "FearX", "score": "2-0", "w": true}, {"date": "2024-03-23", "opp": "BRION", "score": "0-2", "w": false}]}, "msi": {"result": "3rd", "detail": "2-3 vs BLG, 3-1 vs G2"}, "ewc": {"result": "🏆 Champion", "detail": "3-1 vs TES"}, "summer": {"w": 11, "l": 7, "rank": "3rd", "playoff": "3rd (3-0 vs DK)", "matches": [{"date": "2024-06-12", "opp": "Nongshim RedForce", "score": "2-0", "w": true}, {"date": "2024-06-14", "opp": "KT Rolster", "score": "2-1", "w": true}, {"date": "2024-06-19", "opp": "DRX", "score": "2-0", "w": true}, {"date": "2024-06-21", "opp": "FearX", "score": "2-0", "w": true}, {"date": "2024-06-28", "opp": "Hanwha Life", "score": "0-2", "w": false}, {"date": "2024-06-30", "opp": "Dplus KIA", "score": "2-0", "w": true}, {"date": "2024-07-05", "opp": "Gen.G", "score": "0-2", "w": false}, {"date": "2024-07-10", "opp": "BRION", "score": "2-0", "w": true}, {"date": "2024-07-12", "opp": "Kwangdong Freecs", "score": "2-0", "w": true}, {"date": "2024-07-19", "opp": "Nongshim RedForce", "score": "1-2", "w": false}, {"date": "2024-07-24", "opp": "Hanwha Life", "score": "0-2", "w": false}, {"date": "2024-07-26", "opp": "Dplus KIA", "score": "1-2", "w": false}, {"date": "2024-08-01", "opp": "KT Rolster", "score": "2-0", "w": true}, {"date": "2024-08-07", "opp": "Gen.G", "score": "1-2", "w": false}, {"date": "2024-08-09", "opp": "FearX", "score": "2-0", "w": true}, {"date": "2024-08-14", "opp": "DRX", "score": "2-0", "w": true}, {"date": "2024-08-16", "opp": "BRION", "score": "0-2", "w": false}, {"date": "2024-08-18", "opp": "Kwangdong Freecs", "score": "2-0", "w": true}]}, "worlds": {"result": "🏆 CHAMPION", "detail": "3-2 vs BLG", "roster": ["Zeus", "Oner", "Faker", "Gumayusi", "Keria"]}, "mvps": {"Faker": 7, "Oner": 5, "Gumayusi": 4, "Keria": 4, "Zeus": 3}}, "2025": {"roster": ["Doran", "Oner", "Faker", "Gumayusi", "Smash"], "lck_cup": {"result": "🏆 Champion", "detail": "3-2 vs Gen.G"}, "first_stand": {"result": "Runner-up", "detail": "2-3 vs HLE"}, "spring": {"w": 13, "l": 5, "rank": "2nd", "playoff": "Runner-up (1-3 vs Gen.G)", "matches": [{"date": "2025-04-02", "opp": "KT Rolster", "score": "2-0", "w": true}, {"date": "2025-04-05", "opp": "Hanwha Life", "score": "2-1", "w": true}, {"date": "2025-04-09", "opp": "Gen.G", "score": "1-2", "w": false}, {"date": "2025-04-13", "opp": "Dplus KIA", "score": "2-0", "w": true}, {"date": "2025-04-16", "opp": "DN SOOPers", "score": "2-1", "w": true}, {"date": "2025-04-19", "opp": "DRX", "score": "2-0", "w": true}, {"date": "2025-04-23", "opp": "NS RedForce", "score": "2-0", "w": true}, {"date": "2025-04-27", "opp": "BFX", "score": "2-0", "w": true}, {"date": "2025-05-01", "opp": "BRO", "score": "0-2", "w": false}, {"date": "2025-05-04", "opp": "Hanwha Life", "score": "0-2", "w": false}, {"date": "2025-05-08", "opp": "Gen.G", "score": "1-2", "w": false}, {"date": "2025-05-11", "opp": "KT Rolster", "score": "2-0", "w": true}, {"date": "2025-05-15", "opp": "Dplus KIA", "score": "2-1", "w": true}, {"date": "2025-05-18", "opp": "DN SOOPers", "score": "2-0", "w": true}, {"date": "2025-05-21", "opp": "DRX", "score": "2-0", "w": true}, {"date": "2025-05-24", "opp": "NS RedForce", "score": "2-0", "w": true}, {"date": "2025-05-28", "opp": "BFX", "score": "2-1", "w": true}, {"date": "2025-05-31", "opp": "BRO", "score": "1-2", "w": false}]}, "msi": {"result": "Runner-up", "detail": "2-3 vs Gen.G"}, "summer": {"w": 10, "l": 8, "rank": "4th", "playoff": "Semifinals", "matches": [{"date": "2025-07-11", "opp": "KT Rolster", "score": "2-0", "w": true}, {"date": "2025-07-13", "opp": "Hanwha Life", "score": "0-2", "w": false}, {"date": "2025-07-18", "opp": "Gen.G", "score": "0-2", "w": false}, {"date": "2025-07-20", "opp": "Dplus KIA", "score": "2-1", "w": true}, {"date": "2025-07-24", "opp": "DN SOOPers", "score": "2-0", "w": true}, {"date": "2025-07-27", "opp": "DRX", "score": "2-0", "w": true}, {"date": "2025-07-31", "opp": "NS RedForce", "score": "2-0", "w": true}, {"date": "2025-08-03", "opp": "BFX", "score": "1-2", "w": false}, {"date": "2025-08-07", "opp": "BRO", "score": "2-1", "w": true}, {"date": "2025-08-10", "opp": "Hanwha Life", "score": "1-2", "w": false}, {"date": "2025-08-14", "opp": "Gen.G", "score": "0-2", "w": false}, {"date": "2025-08-17", "opp": "KT Rolster", "score": "2-0", "w": true}, {"date": "2025-08-21", "opp": "Dplus KIA", "score": "1-2", "w": false}, {"date": "2025-08-24", "opp": "DN SOOPers", "score": "2-0", "w": true}, {"date": "2025-08-28", "opp": "DRX", "score": "2-0", "w": true}, {"date": "2025-08-31", "opp": "NS RedForce", "score": "2-1", "w": true}, {"date": "2025-09-04", "opp": "BFX", "score": "0-2", "w": false}, {"date": "2025-09-07", "opp": "BRO", "score": "1-2", "w": false}]}, "worlds": {"result": "Top 8", "detail": "Quarterfinals (1-3 vs BLG)"}, "mvps": {"Faker": 5, "Oner": 4, "Gumayusi": 4, "Doran": 3, "Smash": 2}}, "2026": {"roster": ["Doran", "Oner", "Faker", "Peyz", "Keria"], "lck_cup": {"result": "Group 5-0 / Playoffs 4th", "detail": "1-3 vs BFX, 2-3 vs DK (reverse sweep)"}, "rounds_1_2": {"result": "12-4 (ongoing)", "detail": "As of May 30, 2026 - Tied 2nd place"}, "mvps": {"Faker": 2, "Oner": 2, "Doran": 1, "Gumayusi": 1, "Smash": 1, "Peyz": 1}, "detailed_matches": [{"date": "2026-01-16", "opp": "Hanwha Life", "score": "2-1", "w": true, "mvp": "Faker", "tournament": "LCK Cup - Group Stage"}, {"date": "2026-01-18", "opp": "DRX", "score": "2-1", "w": true, "mvp": "", "tournament": "LCK Cup - Group Stage"}, {"date": "2026-01-24", "opp": "KT Rolster", "score": "2-0", "w": true, "mvp": "", "tournament": "LCK Cup - Group Stage"}, {"date": "2026-01-25", "opp": "BNK FearX", "score": "2-0", "w": true, "mvp": "", "tournament": "LCK Cup - Group Stage"}, {"date": "2026-01-31", "opp": "Dplus Kia", "score": "3-0", "w": true, "mvp": "Doran", "tournament": "LCK Cup - Group Stage"}, {"date": "2026-02-15", "opp": "BNK FearX", "score": "1-3", "w": false, "mvp": "", "tournament": "LCK Cup - Playoffs"}, {"date": "2026-02-22", "opp": "Dplus Kia", "score": "2-3", "w": false, "mvp": "", "tournament": "LCK Cup - Playoffs"}, {"date": "2026-04-01", "opp": "KT Rolster", "score": "0-2", "w": false, "mvp": "", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-04", "opp": "Hanwha Life", "score": "2-0", "w": true, "mvp": "Faker", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-08", "opp": "Gen.G", "score": "0-2", "w": false, "mvp": "", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-10", "opp": "DN SOOPers", "score": "2-0", "w": true, "mvp": "Gumayusi", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-17", "opp": "Dplus Kia", "score": "1-2", "w": false, "mvp": "", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-19", "opp": "Kiwoom DRX", "score": "2-0", "w": true, "mvp": "Doran", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-25", "opp": "HANJIN BRION", "score": "2-0", "w": true, "mvp": "", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-26", "opp": "BNK FearX", "score": "2-0", "w": true, "mvp": "Oner", "tournament": "LCK Rounds 1-2"}, {"date": "2026-04-29", "opp": "NS RedForce", "score": "2-0", "w": true, "mvp": "Oner", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-01", "opp": "Hanwha Life", "score": "1-2", "w": false, "mvp": "", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-08", "opp": "DN SOOPers", "score": "2-0", "w": true, "mvp": "", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-10", "opp": "HANJIN BRION", "score": "2-0", "w": true, "mvp": "", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-13", "opp": "NS RedForce", "score": "2-0", "w": true, "mvp": "", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-16", "opp": "Gen.G", "score": "2-1", "w": true, "mvp": "Peyz", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-28", "opp": "KT Rolster", "score": "2-0", "w": true, "mvp": "", "tournament": "LCK Rounds 1-2"}, {"date": "2026-05-30", "opp": "BNK FearX", "score": "2-0", "w": true, "mvp": "Oner", "tournament": "LCK Rounds 1-2"}]}};
+const P = {"Zeus": {"years": ["2023", "2024"], "mvps": 6, "wins": 0, "losses": 0, "worlds": ["2023", "2024"]}, "Oner": {"years": ["2023", "2024", "2025", "2026"], "mvps": 17, "wins": 0, "losses": 0, "worlds": ["2023", "2024"]}, "Faker": {"years": ["2023", "2024", "2025", "2026"], "mvps": 22, "wins": 0, "losses": 0, "worlds": ["2023", "2024"]}, "Gumayusi": {"years": ["2023", "2024", "2025"], "mvps": 13, "wins": 0, "losses": 0, "worlds": ["2023", "2024"]}, "Keria": {"years": ["2023", "2024", "2026"], "mvps": 8, "wins": 0, "losses": 0, "worlds": ["2023", "2024"]}, "Doran": {"years": ["2025", "2026"], "mvps": 4, "wins": 0, "losses": 0, "worlds": []}, "Smash": {"years": ["2025"], "mvps": 2, "wins": 0, "losses": 0, "worlds": []}, "Peyz": {"years": ["2026"], "mvps": 1, "wins": 0, "losses": 0, "worlds": []}};
 
-// ===== COVER =====
-document.getElementById('coverYears').textContent = CHAMPIONS.join('  ·  ');
-document.getElementById('coverRoster').innerHTML = ['Zeus','Oner','Faker','Gumayusi','Keria'].map(n=>
-  `<span class="roster-chip">${n}</span>`).join('');
-
-function enterDashboard(){
-  document.getElementById('cover').classList.add('hidden');
-}
-
-// ===== TAB SWITCHING =====
-function switchTab(year, evt){
+function switchTab(year,evt){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  if (evt && evt.target) evt.target.closest('.tab-btn').classList.add('active');
-  else {
-    const btns = document.querySelectorAll('.tab-btn');
-    const idx = {summary:0,'2026':1,'2025':2,'2024':3,'2023':4}[year]||0;
-    if (btns[idx]) btns[idx].classList.add('active');
-  }
-  ['summary','2023','2024','2025','2026'].forEach(y=>{
-    document.getElementById('panel-'+y).style.display = y===year?'block':'none';
+  if(evt&&evt.target)evt.target.closest('.tab-btn').classList.add('active');
+  else{const idx={summary:0,players:1,'2026':2,'2025':3,'2024':4,'2023':5}[year]||0;
+    const btns=document.querySelectorAll('.tab-btn');if(btns[idx])btns[idx].classList.add('active');}
+  ['summary','players','2023','2024','2025','2026'].forEach(y=>{
+    document.getElementById('panel-'+y).style.display=y===year?'block':'none';
   });
 }
 
-// ===== BUILD PANELS =====
-function buildSummaryPanel(){
-  const html = `
-    <div class="year-hero">
-      <div class="trophy-icon">👑</div>
-      <h2>T1 历年数据中心</h2>
-      <p style="color:var(--muted);margin-top:8px">2023 · 2024 · 2025 · 2026</p>
-    </div>
-
-    <div class="champ-timeline">
-      ${CHAMPIONS.map(y=>`<div class="champ-badge"><div class="year-num">${y}</div><div class="star">🏆</div></div>`).join('')}
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-card"><div class="num" style="color:var(--gold)">${SUMMARY.worlds_titles}</div><div class="label">S赛冠军</div></div>
-      <div class="stat-card"><div class="num w">${SUMMARY.total_wins}</div><div class="label">总胜场</div></div>
-      <div class="stat-card"><div class="num l">${SUMMARY.total_losses}</div><div class="label">总负场</div></div>
-      <div class="stat-card"><div class="num wr">${SUMMARY.winrate}%</div><div class="label">总胜率</div></div>
-      <div class="stat-card"><div class="num" style="color:#58a6ff">4</div><div class="label">赛季</div></div>
-    </div>
-
-    <div class="tourney-row">
-      ${Object.entries(SEASONS).map(([year, s]) => {
-        let worlds = s.worlds || '';
-        let bestResult = worlds.includes('CHAMPION') ? '🏆 S赛冠军' : worlds || '--';
-        let roster = (s.roster||[]).join(' · ');
-        let summary = year==='2026' ? (s.rounds_1_2||'') :
-          (s.spring?`Spring ${s.spring.w}-${s.spring.l}`:'') + (s.summer?` | Summer ${s.summer.w}-${s.summer.l}`:'');
-        return `<div class="tourney-card">
-          <h4>${year} Season</h4>
-          <div class="record" style="font-size:1.1em">${bestResult}</div>
-          <div class="detail">${summary}<br>Roster: ${roster}</div>
-        </div>`;
-      }).join('')}
-    </div>
-  `;
-  document.getElementById('panel-summary').innerHTML = html;
+// ===== 统计函数 =====
+function countMatches(yd){
+  let w=0,l=0,m=[];
+  ['spring','summer'].forEach(k=>{
+    if(yd[k]&&yd[k].matches){
+      yd[k].matches.forEach(x=>{if(x.w)w++;else l++;m.push({...x,season:k});});
+    }
+  });
+  if(yd.detailed_matches){
+    yd.detailed_matches.forEach(x=>{if(x.w)w++;else l++;m.push({...x,season:'tournament'});});
+  }
+  return {w,l,total:w+l,matches:m};
 }
 
-function buildYearPanel(year){
-  const s = SEASONS[year];
-  if (!s) return '<p>No data</p>';
+function renderMatches(matches, limit){
+  if(!matches||!matches.length)return'';
+  const rows=matches.slice(0,limit||999);
+  return`<table class="match-table"><thead><tr><th>日期</th><th>对手</th><th>比分</th><th>结果</th><th>赛事</th>${rows.some(r=>r.mvp)?'<th>MVP</th>':''}</tr></thead>
+  <tbody>${rows.map(r=>`<tr><td>${r.date}</td><td>${r.opp}</td><td>${r.score}</td>
+    <td class="${r.w?'w-tag':'l-tag'}">${r.w?'W':'L'}</td>
+    <td style="color:var(--m);font-size:.8em">${r.season||r.tournament||'-'}</td>
+    ${r.mvp?`<td class="mvp-tag">👑 ${r.mvp}</td>`:rows.some(r=>r.mvp)?'<td>-</td>':''}</tr>`).join('')}</tbody></table>`;
+}
 
-  const isChamp2023 = year==='2023' && s.worlds && s.worlds.includes('CHAMPION');
-  const isChamp2024 = year==='2024' && s.worlds && s.worlds.includes('CHAMPION');
-  const hasPhoto = s.worlds_photo && s.worlds_photo.length > 0;
+// ===== BUILD SUMMARY =====
+(function(){
+  let tw=0,tl=0;
+  Object.values(D).forEach(yd=>{const s=countMatches(yd);tw+=s.w;tl+=s.l;});
+  const wr=(tw/(tw+tl)*100).toFixed(1);
 
-  let heroHTML = `
-    <div class="year-hero">
-      <div class="trophy-icon">${isChamp2023||isChamp2024?'🏆':'🎯'}</div>
-      <h2>T1 ${year} Season</h2>
-      ${s.worlds?`<div class="result">${s.worlds}</div>`:''}
-      ${hasPhoto?`<img class="photo" src="${s.worlds_photo}" alt="T1 ${year} Worlds" onerror="this.style.display='none'">`:''}
-      <div class="roster-row">${(s.roster||[]).map(n=>`<span class="roster-tag">${n}</span>`).join('')}</div>
+  let html=`
+    <div class="hero"><div class="trophy-icon">👑</div><h2>T1 历年数据中心</h2>
+      <p style="color:var(--m);margin-top:6px">2023 · 2024 · 2025 · 2026</p></div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin:20px 0">
+      ${[2013,2015,2016,2023,2024].map(y=>`<div style="text-align:center;padding:16px 20px;background:linear-gradient(135deg,rgba(200,169,81,.12),rgba(255,215,0,.03));border:2px solid rgba(200,169,81,.25);border-radius:8px"><div style="font-size:2em;font-weight:900;color:var(--g)">${y}</div><div style="color:var(--g);font-size:1em">🏆</div></div>`).join('')}
     </div>
-  `;
-
-  // Stats
-  let totalW = 0, totalL = 0;
-  ['spring','summer'].forEach(k=>{if(s[k]&&s[k].w){totalW+=s[k].w;totalL+=s[k].l;}});
-  // Add 2026 cup/rounds
-  if (year==='2026' && s.matches){
-    s.matches.forEach(m=>{if(m.winner==='T1')totalW++;else if(m.winner)totalL++;});
-  }
-
-  let statsHTML = totalW+totalL>0 ? `
     <div class="stat-row">
-      <div class="stat-card"><div class="num w">${totalW}</div><div class="label">胜场</div></div>
-      <div class="stat-card"><div class="num l">${totalL}</div><div class="label">负场</div></div>
-      <div class="stat-card"><div class="num wr">${(totalW/(totalW+totalL)*100).toFixed(1)}%</div><div class="label">胜率</div></div>
-    </div>` : '';
+      <div class="stat-card"><div class="num" style="color:var(--g)">5</div><div class="label">S赛冠军</div></div>
+      <div class="stat-card"><div class="num w">${tw}</div><div class="label">总胜场</div></div>
+      <div class="stat-card"><div class="num l">${tl}</div><div class="label">总负场</div></div>
+      <div class="stat-card"><div class="num wr">${wr}%</div><div class="label">总胜率</div></div>
+      <div class="stat-card"><div class="num" style="color:#58a6ff">4</div><div class="label">赛季</div></div>
+      <div class="stat-card"><div class="num" style="color:#ce93d8">${Object.keys(P).length}</div><div class="label">选手</div></div>
+    </div>
+    <div class="tourney-grid">
+      ${Object.entries(D).map(([year,yd])=>{
+        const s=countMatches(yd);
+        const worlds=yd.worlds?yd.worlds.result:'';
+        const isChamp=worlds.includes('CHAMPION');
+        return`<div class="t-card"><h4>${year} ${isChamp?'🏆':''}</h4>
+          <div style="font-size:1.3em;font-weight:900;color:${isChamp?'var(--g)':'#fff'}">${isChamp?'S赛冠军':worlds||'--'}</div>
+          <div class="detail">战绩: ${s.w}-${s.l} (${(s.w/(s.w+s.l)*100).toFixed(0)}%)<br>Roster: ${(yd.roster||[]).join(' · ')}</div></div>`;
+      }).join('')}
+    </div>`;
+  document.getElementById('panel-summary').innerHTML=html;
+})();
+
+// ===== BUILD YEAR PANELS =====
+['2023','2024','2025','2026'].forEach(year=>{
+  const yd=D[year];if(!yd)return;
+  const s=countMatches(yd);
+  const isChamp=yd.worlds&&yd.worlds.result.includes('CHAMPION');
+  const allMS=[];
+  ['spring','summer'].forEach(k=>{if(yd[k]&&yd[k].matches)allMS.push({season:k,matches:yd[k].matches});});
+  if(yd.detailed_matches)allMS.push({season:'tournament',matches:yd.detailed_matches});
+  const flatMatches=[];
+  allMS.forEach(sm=>sm.matches.forEach(m=>flatMatches.push({...m,season:sm.season})));
+
+  let html=`
+    <div class="hero"><div class="trophy-icon">${isChamp?'🏆':'🎯'}</div>
+      <h2>T1 ${year} Season</h2>
+      ${yd.worlds?`<div class="result">${yd.worlds.result} — ${yd.worlds.detail||''}</div>`:''}
+      <div class="roster-row">${(yd.roster||[]).map(n=>`<span class="roster-tag">${n}</span>`).join('')}</div></div>
+    <div class="stat-row">
+      <div class="stat-card"><div class="num w">${s.w}</div><div class="label">胜场</div></div>
+      <div class="stat-card"><div class="num l">${s.l}</div><div class="label">负场</div></div>
+      <div class="stat-card"><div class="num wr">${(s.w/(s.w+s.l)*100).toFixed(1)}%</div><div class="label">胜率</div></div>
+      <div class="stat-card"><div class="num">${s.w+s.l}</div><div class="label">总场次</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--g)">${Object.keys(yd.mvps||{}).length}</div><div class="label">MVP得主</div></div></div>`;
 
   // Tournament cards
-  let tourneys = '';
-  if (s.lck_cup) tourneys += `<div class="tourney-card"><h4>LCK Cup</h4><div class="detail">${s.lck_cup}</div></div>`;
-  if (s.first_stand) tourneys += `<div class="tourney-card"><h4>First Stand</h4><div class="detail">${s.first_stand}</div></div>`;
-  if (s.spring) tourneys += `<div class="tourney-card"><h4>Spring Regular</h4><div class="record" style="color:var(--gold)">${s.spring.w}-${s.spring.l}</div><div class="detail">Rank: ${s.spring.rank}<br>Playoffs: ${s.spring.playoff}</div></div>`;
-  if (s.msi) tourneys += `<div class="tourney-card"><h4>MSI</h4><div class="detail">${s.msi}</div></div>`;
-  if (s.ewc) tourneys += `<div class="tourney-card"><h4>EWC</h4><div class="detail">${s.ewc}</div></div>`;
-  if (s.summer) tourneys += `<div class="tourney-card"><h4>Summer Regular</h4><div class="record" style="color:var(--gold)">${s.summer.w}-${s.summer.l}</div><div class="detail">Rank: ${s.summer.rank}<br>Playoffs: ${s.summer.playoff}</div></div>`;
-  if (s.rounds_1_2) tourneys += `<div class="tourney-card"><h4>Rounds 1-2</h4><div class="detail">${s.rounds_1_2}</div></div>`;
+  html+=`<div class="tourney-grid">`;
+  if(yd.lck_cup)html+=`<div class="t-card"><h4>🏆 LCK Cup</h4><div class="detail">${yd.lck_cup.result}<br>${yd.lck_cup.detail}</div></div>`;
+  if(yd.first_stand)html+=`<div class="t-card"><h4>🌍 First Stand</h4><div class="detail">${yd.first_stand.result}<br>${yd.first_stand.detail}</div></div>`;
+  if(yd.spring)html+=`<div class="t-card"><h4>🌸 Spring</h4><div style="font-size:1.2em;font-weight:900;color:var(--g)">${yd.spring.w}-${yd.spring.l}</div><div class="detail">Rank: ${yd.spring.rank}<br>Playoffs: ${yd.spring.playoff}</div></div>`;
+  if(yd.msi)html+=`<div class="t-card"><h4>🌍 MSI</h4><div class="detail">${yd.msi.result}<br>${yd.msi.detail||''}</div></div>`;
+  if(yd.ewc)html+=`<div class="t-card"><h4>🏆 EWC</h4><div class="detail">${yd.ewc.result}<br>${yd.ewc.detail||''}</div></div>`;
+  if(yd.summer)html+=`<div class="t-card"><h4>☀️ Summer</h4><div style="font-size:1.2em;font-weight:900;color:var(--g)">${yd.summer.w}-${yd.summer.l}</div><div class="detail">Rank: ${yd.summer.rank}<br>Playoffs: ${yd.summer.playoff}</div></div>`;
+  if(yd.rounds_1_2)html+=`<div class="t-card"><h4>📅 Rounds 1-2</h4><div class="detail">${yd.rounds_1_2.result}<br>${yd.rounds_1_2.detail}</div></div>`;
+  html+=`</div>`;
 
-  let tourneyHTML = tourneys ? `<div class="tourney-row">${tourneys}</div>` : '';
-
-  // Match table (2026 only)
-  let matchTable = '';
-  if (year==='2026' && s.matches && s.matches.length > 0){
-    const recent = [...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,20);
-    matchTable = `
-      <h3 style="color:var(--red);margin:25px 0 15px">📋 比赛记录</h3>
-      <table><thead><tr><th>日期</th><th>对手</th><th>比分</th><th>结果</th><th>赛事</th><th>MVP</th></tr></thead>
-      <tbody>${recent.map(m=>{
-        const opp = m.team1==='T1'?m.team2:m.team1;
-        const [s1,s2]=m.score.split('-').map(Number);
-        const t1s = m.team1==='T1'?s1:s2;
-        const opps = m.team1==='T1'?s2:s1;
-        const isWin = t1s > opps;
-        return `<tr>
-          <td>${m.date}</td><td>${opp}</td><td>${t1s}-${opps}</td>
-          <td class="${isWin?'result-win':'result-loss'}">${isWin?'W':'L'}</td>
-          <td style="color:var(--muted);font-size:.85em">${(m.tournament||'').replace('LCK Rounds 1-2','R1-2').replace('LCK Cup - ','Cup ')}</td>
-          <td class="mvp-tag">${m.mvp||'-'}</td>
-        </tr>`;
-      }).join('')}</tbody></table>`;
+  // MVP leaderboard
+  if(yd.mvps){
+    const mvpSorted=Object.entries(yd.mvps).sort((a,b)=>b[1]-a[1]);
+    html+=`<h3 class="section-title">👑 ${year} MVP 榜</h3><div class="tourney-grid">${mvpSorted.map(([n,c],i)=>`<div class="t-card" style="text-align:center"><h4>#${i+1} ${n}</h4><div style="font-size:1.5em;font-weight:900;color:var(--g)">${c}</div><div class="detail">次 MVP</div></div>`).join('')}</div>`;
   }
 
-  return heroHTML + statsHTML + tourneyHTML + matchTable;
-}
+  // Match tables by season
+  allMS.forEach(sm=>{
+    const sn=sm.season==='spring'?'🌸 Spring':sm.season==='summer'?'☀️ Summer':sm.season==='tournament'?'📅 Tournaments':sm.season;
+    html+=`<h3 class="section-title">${sn} 比赛记录 (${sm.matches.length}场)</h3>`;
+    html+=renderMatches(sm.matches.map(m=>({...m,season:sn})),999);
+  });
 
-// ===== INIT =====
-buildSummaryPanel();
-['2023','2024','2025','2026'].forEach(y=>{
-  document.getElementById('panel-'+y).innerHTML = buildYearPanel(y);
+  // Player section for this year
+  html+=`<h3 class="section-title">👤 ${year} 选手</h3><div class="player-grid">`;
+  (yd.roster||[]).forEach(name=>{
+    const mvpCount=yd.mvps?.[name]||0;
+    const roleMap={Zeus:'Top',Doran:'Top',Oner:'Jungle',Faker:'Mid',Gumayusi:'ADC',Peyz:'ADC',Smash:'ADC',Keria:'Support'};
+    const role=roleMap[name]||'';
+    const worlds=P[name]?.worlds||[];
+    html+=`<div class="p-card">
+      <div class="p-name">${name}</div><div class="p-role">${role}</div>
+      <div class="p-stat"><div class="p-stat-item"><div class="p-stat-val g">${mvpCount}</div><div class="p-stat-lbl">MVP</div></div></div>
+      ${worlds.length?`<div class="p-worlds">🏆 S赛冠军: ${worlds.join(' ')}</div>`:''}
+      <div class="p-years">${year} Season</div></div>`;
+  });
+  html+=`</div>`;
+
+  document.getElementById('panel-'+year).innerHTML=html;
 });
+
+// ===== BUILD PLAYERS PANEL =====
+(function(){
+  const roleMap={Zeus:'Top',Doran:'Top',Oner:'Jungle',Faker:'Mid',Gumayusi:'ADC',Peyz:'ADC',Smash:'ADC',Keria:'Support'};
+  const playerOrder=['Faker','Oner','Gumayusi','Keria','Zeus','Doran','Smash','Peyz'];
+  let html=`<div class="hero"><div class="trophy-icon">👤</div><h2>选手数据中心</h2><p style="color:var(--m);margin-top:6px">2023-2026 所有选手综合数据</p></div>`;
+
+  html+=`<div class="player-grid">`;
+  playerOrder.filter(n=>P[n]).forEach(name=>{
+    const p=P[name];
+    html+=`<div class="p-card">
+      <div class="p-name">${name}</div><div class="p-role">${roleMap[name]||''}</div>
+      <div class="p-stat">
+        <div class="p-stat-item"><div class="p-stat-val g">${p.worlds.length}</div><div class="p-stat-lbl">S赛🏆</div></div>
+        <div class="p-stat-item"><div class="p-stat-val" style="color:#58a6ff">${p.mvps}</div><div class="p-stat-lbl">MVP</div></div>
+        <div class="p-stat-item"><div class="p-stat-val" style="color:#81c784">${p.years.length}</div><div class="p-stat-lbl">赛季</div></div>
+      </div>
+      ${p.worlds.length?`<div class="p-worlds">🏆 ${p.worlds.join(' ')}</div>`:''}
+      <div class="ptabs">${p.years.map(y=>`<span class="ptab">${y}</span>`).join('')}</div></div>`;
+  });
+  html+=`</div>`;
+
+  // Faker 专区
+  if(P['Faker']){
+    html+=`<h3 class="section-title">👑 Faker — 历年数据</h3>
+    <div class="tourney-grid">
+      ${Object.entries(D).map(([year,yd])=>{
+        const mvp=yd.mvps?.['Faker']||0;
+        const worlds=yd.worlds?.result||'';
+        return`<div class="t-card" style="text-align:center">
+          <h4>${year}</h4><div style="font-size:1.3em;font-weight:900;color:var(--g)">${mvp} MVP</div>
+          <div class="detail">${worlds}</div></div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  document.getElementById('panel-players').innerHTML=html;
+})();
 </script>
 </body>
 </html>
