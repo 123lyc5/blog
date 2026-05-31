@@ -278,14 +278,21 @@ function renderMatches(matches, limit){
   if(yd.detailed_matches)allMS.push({season:'2026 Tournaments',matches:yd.detailed_matches});
   const flatMatches=[];
   allMS.forEach(sm=>sm.matches.forEach(m=>flatMatches.push(m)));
-  // Count ALL matches - both series and game level
-  const seriesW=flatMatches.filter(m=>m.w).length;
-  const seriesL=flatMatches.filter(m=>!m.w).length;
-  let gameW=0,gameL=0;
-  flatMatches.forEach(m=>{
-    const[gw,gl]=gameWins(m.score||'0-0');
-    gameW+=gw;gameL+=gl;
-  });
+  // Split ALL matches into LCK vs International
+  const lckLabelList=['🌸 LCK Spring','☀️ LCK Summer','🇰🇷 LCK Cup','📅 LCK Rounds 1-2','📅 LCK Rounds 3-5'];
+  const intlLabelList=['🌍 MSI','⚡ EWC','👑 Worlds'];
+  function calcStats(matches){
+    let sw=0,sl=0,gw=0,gl=0;
+    matches.forEach(m=>{if(m.w)sw++;else sl++;const[g1,g2]=gameWins(m.score||'0-0');gw+=g1;gl+=g2;});
+    return {sw,sl,gw,gl,total:sw+sl,gtotal:gw+gl,
+      sr:sw+sl>0?(sw/(sw+sl)*100).toFixed(1):'0.0',
+      gr:gw+gl>0?(gw/(gw+gl)*100).toFixed(1):'0.0'};
+  }
+  const allStats=calcStats(flatMatches);
+  const lckMatches=flatMatches.filter(m=>lckLabelList.includes(m.season));
+  const intlMatches=flatMatches.filter(m=>intlLabelList.includes(m.season));
+  const lckStats=calcStats(lckMatches);
+  const intlStats=calcStats(intlMatches);
 
   let html=`
     <div class="hero"><div class="trophy-icon">${isChamp?'🏆':'🎯'}</div>
@@ -293,15 +300,45 @@ function renderMatches(matches, limit){
       ${yd.worlds?`<div class="result">${yd.worlds.result} — ${yd.worlds.detail||''}</div>`:''}
       <div class="roster-row">${(yd.roster||[]).map(n=>`<span class="roster-tag">${n}</span>`).join('')}</div></div>
 
+    <h3 class="section-title">📊 ${year} 全年综合战绩</h3>
     <div class="stat-row">
-      <div class="stat-card"><div class="num">${seriesW+seriesL}</div><div class="label">大场数</div></div>
-      <div class="stat-card"><div class="num w">${seriesW}</div><div class="label">大场胜</div></div>
-      <div class="stat-card"><div class="num l">${seriesL}</div><div class="label">大场负</div></div>
-      <div class="stat-card"><div class="num wr">${seriesW+seriesL>0?(seriesW/(seriesW+seriesL)*100).toFixed(1):0}%</div><div class="label">大场胜率</div></div>
-      <div class="stat-card"><div class="num">${gameW+gameL}</div><div class="label">小场数</div></div>
-      <div class="stat-card"><div class="num w">${gameW}</div><div class="label">小场胜</div></div>
-      <div class="stat-card"><div class="num l">${gameL}</div><div class="label">小场负</div></div>
-      <div class="stat-card"><div class="num wr">${gameW+gameL>0?(gameW/(gameW+gameL)*100).toFixed(1):0}%</div><div class="label">小场胜率</div></div>
+      <div class="stat-card"><div class="num">${allStats.total}</div><div class="label">大场</div></div>
+      <div class="stat-card"><div class="num w">${allStats.sw}</div><div class="label">胜</div></div>
+      <div class="stat-card"><div class="num l">${allStats.sl}</div><div class="label">负</div></div>
+      <div class="stat-card"><div class="num wr">${allStats.sr}%</div><div class="label">大场胜率</div></div>
+      <div class="stat-card"><div class="num">${allStats.gtotal}</div><div class="label">小场</div></div>
+      <div class="stat-card"><div class="num w">${allStats.gw}</div><div class="label">小胜</div></div>
+      <div class="stat-card"><div class="num l">${allStats.gl}</div><div class="label">小负</div></div>
+      <div class="stat-card"><div class="num wr">${allStats.gr}%</div><div class="label">小场胜率</div></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0">
+      <div style="background:var(--c);border:1px solid var(--b);border-radius:6px;padding:14px">
+        <h4 style="color:#58a6ff;margin:0 0 10px">🇰🇷 LCK 国内赛事</h4>
+        <div class="stat-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+          <div class="stat-card"><div class="num">${lckStats.total}</div><div class="label">大场</div></div>
+          <div class="stat-card"><div class="num w">${lckStats.sw}</div><div class="label">胜</div></div>
+          <div class="stat-card"><div class="num l">${lckStats.sl}</div><div class="label">负</div></div>
+          <div class="stat-card"><div class="num wr">${lckStats.sr}%</div><div class="label">大场</div></div>
+          <div class="stat-card"><div class="num">${lckStats.gtotal}</div><div class="label">小场</div></div>
+          <div class="stat-card"><div class="num w">${lckStats.gw}</div><div class="label">小胜</div></div>
+          <div class="stat-card"><div class="num l">${lckStats.gl}</div><div class="label">小负</div></div>
+          <div class="stat-card"><div class="num wr">${lckStats.gr}%</div><div class="label">小场</div></div>
+        </div>
+      </div>
+      <div style="background:var(--c);border:1px solid var(--b);border-radius:6px;padding:14px">
+        <h4 style="color:var(--g);margin:0 0 10px">🌍 国际赛事</h4>
+        <div class="stat-row" style="grid-template-columns:1fr 1fr 1fr 1fr">
+          <div class="stat-card"><div class="num">${intlStats.total}</div><div class="label">大场</div></div>
+          <div class="stat-card"><div class="num w">${intlStats.sw}</div><div class="label">胜</div></div>
+          <div class="stat-card"><div class="num l">${intlStats.sl}</div><div class="label">负</div></div>
+          <div class="stat-card"><div class="num wr">${intlStats.sr}%</div><div class="label">大场</div></div>
+          <div class="stat-card"><div class="num">${intlStats.gtotal}</div><div class="label">小场</div></div>
+          <div class="stat-card"><div class="num w">${intlStats.gw}</div><div class="label">小胜</div></div>
+          <div class="stat-card"><div class="num l">${intlStats.gl}</div><div class="label">小负</div></div>
+          <div class="stat-card"><div class="num wr">${intlStats.gr}%</div><div class="label">小场</div></div>
+        </div>
+      </div>
     </div>`;
 
   // ===== T1 Team Achievement showcase =====
