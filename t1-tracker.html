@@ -399,11 +399,41 @@ function renderMatches(matches, limit){
   html+=`</div>`;
 
 
-  // Match tables - all tournaments with data
+  // Match tables - group RS + PO together with breakdown
   allMS.forEach(sm=>{
     if(sm.matches.length>0){
-      html+=`<h3 class="section-title">${sm.season} 比赛记录 (${sm.matches.length}场)</h3>`;
-      html+=renderMatches(sm.matches.map(m=>({...m,season:m.season||sm.season})),999);
+      // Split matches into Regular Season vs Playoffs/Other
+      const rsMatches=[], poMatches=[];
+      sm.matches.forEach(m=>{
+        const evt=(m.season||m.event||'').toLowerCase();
+        if(evt.includes('po ')||evt.includes('playoff')||evt.includes('final')||evt.includes('upper')||evt.includes('lower')||evt.includes('r1')||evt.includes('r2')||evt.includes('r3')||evt.includes('sf')||evt.includes('lb')){
+          poMatches.push(m);
+        }else{
+          rsMatches.push(m);
+        }
+      });
+      const rsW=rsMatches.filter(m=>m.w).length,rsL=rsMatches.length-rsW;
+      const poW=poMatches.filter(m=>m.w).length,poL=poMatches.length-poW;
+      // Game level stats
+      let rsGW=0,rsGL=0,poGW=0,poGL=0;
+      rsMatches.forEach(m=>{const[gw,gl]=gameWins(m.score||'0-0');rsGW+=gw;rsGL+=gl;});
+      poMatches.forEach(m=>{const[gw,gl]=gameWins(m.score||'0-0');poGW+=gw;poGL+=gl;});
+
+      const totW=rsW+poW, totL=rsL+poL;
+      const totGW=rsGW+poGW, totGL=rsGL+poGL;
+
+      html+=`<h3 class="section-title">${sm.season} · 总战绩 ${totW}-${totL} (大场) ${totGW}-${totGL} (小场)</h3>`;
+
+      // Regular Season subsection
+      if(rsMatches.length>0){
+        html+=`<div style="margin:8px 0;color:var(--m);font-size:.85em">📋 常规赛 ${rsW}-${rsL} (小场${rsGW}-${rsGL})</div>`;
+        html+=renderMatches(rsMatches.map(m=>({...m,season:m.season||sm.season})),999);
+      }
+      // Playoffs/Qualifiers subsection
+      if(poMatches.length>0){
+        html+=`<div style="margin:12px 0 8px;color:var(--m);font-size:.85em">🏆 季后赛/资格赛 ${poW}-${poL} (小场${poGW}-${poGL})</div>`;
+        html+=renderMatches(poMatches.map(m=>({...m,season:m.season||m.event||sm.season})),999);
+      }
     }
   });
 
